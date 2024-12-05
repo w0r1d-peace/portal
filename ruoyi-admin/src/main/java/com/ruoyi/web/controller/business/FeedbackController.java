@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.business;
+package com.ruoyi.business.controller;
 
 import java.util.List;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -21,9 +21,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 留言反馈Controller
- * 
+ *
  * @author tangJM.
- * @date 2024-12-03
+ * @date 2024-12-05
  */
 @Controller
 @RequestMapping("/business/feedback")

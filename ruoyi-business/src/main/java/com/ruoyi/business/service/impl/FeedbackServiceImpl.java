@@ -11,19 +11,19 @@ import com.ruoyi.common.core.text.Convert;
 
 /**
  * 留言反馈Service业务层处理
- * 
+ *
  * @author tangJM.
- * @date 2024-12-03
+ * @date 2024-12-05
  */
 @Service
-public class FeedbackServiceImpl implements IFeedbackService 
+public class FeedbackServiceImpl implements IFeedbackService
 {
     @Autowired
     private FeedbackMapper feedbackMapper;
 
     /**
      * 查询留言反馈
-     * 
+     *
      * @param id 留言反馈主键
      * @return 留言反馈
      */
@@ -35,7 +35,7 @@ public class FeedbackServiceImpl implements IFeedbackService
 
     /**
      * 查询留言反馈列表
-     * 
+     *
      * @param feedback 留言反馈
      * @return 留言反馈
      */
@@ -47,7 +47,7 @@ public class FeedbackServiceImpl implements IFeedbackService
 
     /**
      * 新增留言反馈
-     * 
+     *
      * @param feedback 留言反馈
      * @return 结果
      */
@@ -60,7 +60,7 @@ public class FeedbackServiceImpl implements IFeedbackService
 
     /**
      * 修改留言反馈
-     * 
+     *
      * @param feedback 留言反馈
      * @return 结果
      */
@@ -73,7 +73,7 @@ public class FeedbackServiceImpl implements IFeedbackService
 
     /**
      * 批量删除留言反馈
-     * 
+     *
      * @param ids 需要删除的留言反馈主键
      * @return 结果
      */
@@ -85,7 +85,7 @@ public class FeedbackServiceImpl implements IFeedbackService
 
     /**
      * 删除留言反馈信息
-     * 
+     *
      * @param id 留言反馈主键
      * @return 结果
      */

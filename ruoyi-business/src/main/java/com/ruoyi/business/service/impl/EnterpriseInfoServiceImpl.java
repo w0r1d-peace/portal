@@ -11,19 +11,19 @@ import com.ruoyi.common.core.text.Convert;
 
 /**
  * 网站信息Service业务层处理
- * 
+ *
  * @author tangJM.
- * @date 2024-12-03
+ * @date 2024-12-05
  */
 @Service
-public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService 
+public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
 {
     @Autowired
     private EnterpriseInfoMapper enterpriseInfoMapper;
 
     /**
      * 查询网站信息
-     * 
+     *
      * @param id 网站信息主键
      * @return 网站信息
      */
@@ -35,7 +35,7 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
 
     /**
      * 查询网站信息列表
-     * 
+     *
      * @param enterpriseInfo 网站信息
      * @return 网站信息
      */
@@ -47,7 +47,7 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
 
     /**
      * 新增网站信息
-     * 
+     *
      * @param enterpriseInfo 网站信息
      * @return 结果
      */
@@ -60,7 +60,7 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
 
     /**
      * 修改网站信息
-     * 
+     *
      * @param enterpriseInfo 网站信息
      * @return 结果
      */
@@ -73,7 +73,7 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
 
     /**
      * 批量删除网站信息
-     * 
+     *
      * @param ids 需要删除的网站信息主键
      * @return 结果
      */
@@ -85,7 +85,7 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
 
     /**
      * 删除网站信息信息
-     * 
+     *
      * @param id 网站信息主键
      * @return 结果
      */
