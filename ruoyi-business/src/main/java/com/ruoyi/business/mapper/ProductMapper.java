@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.Product;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 产品Mapper接口
@@ -54,8 +55,8 @@ public interface ProductMapper
     /**
      * 批量删除产品
      *
-     * @param ids 需要删除的数据主键集合
+     * @param idList 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteProductByIds(String[] ids);
+    public int deleteProductByIds(@Param("idList") List<Integer> idList);
 }

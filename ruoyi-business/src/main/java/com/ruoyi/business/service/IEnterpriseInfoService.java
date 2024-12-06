@@ -2,6 +2,7 @@ package com.ruoyi.business.service;
 
 import java.util.List;
 import com.ruoyi.business.domain.EnterpriseInfo;
+import com.ruoyi.business.domain.vo.EnterpriseInfoVO;
 
 /**
  * 网站信息Service接口
@@ -58,4 +59,11 @@ public interface IEnterpriseInfoService
      * @return 结果
      */
     public int deleteEnterpriseInfoById(Long id);
+
+    /**
+     * 获取公司信息
+     *
+     * @return
+     */
+    EnterpriseInfoVO info();
 }

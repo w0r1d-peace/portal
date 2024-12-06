@@ -1,15 +1,12 @@
-package com.ruoyi.business.controller;
+package com.ruoyi.web.controller.business;
 
 import java.util.List;
+
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.domain.Feedback;
@@ -25,21 +22,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author tangJM.
  * @date 2024-12-05
  */
-@Controller
+@RestController
 @RequestMapping("/business/feedback")
 public class FeedbackController extends BaseController
 {
-    private String prefix = "business/feedback";
 
     @Autowired
     private IFeedbackService feedbackService;
-
-    @RequiresPermissions("business:feedback:view")
-    @GetMapping()
-    public String feedback()
-    {
-        return prefix + "/feedback";
-    }
 
     /**
      * 查询留言反馈列表
@@ -69,36 +58,21 @@ public class FeedbackController extends BaseController
     }
 
     /**
-     * 新增留言反馈
-     */
-    @GetMapping("/add")
-    public String add()
-    {
-        return prefix + "/add";
-    }
-
-    /**
      * 新增保存留言反馈
      */
-    @RequiresPermissions("business:feedback:add")
     @Log(title = "留言反馈", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    @ResponseBody
-    public AjaxResult addSave(Feedback feedback)
+    public AjaxResult addSave(@RequestBody Feedback feedback)
     {
-        return toAjax(feedbackService.insertFeedback(feedback));
-    }
+        if (StringUtils.isBlank(feedback.getName())) {
+            throw new ServiceException("姓名不能为空");
+        }
 
-    /**
-     * 修改留言反馈
-     */
-    @RequiresPermissions("business:feedback:edit")
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        Feedback feedback = feedbackService.selectFeedbackById(id);
-        mmap.put("feedback", feedback);
-        return prefix + "/edit";
+        if (StringUtils.isBlank(feedback.getInquiryContent())) {
+            throw new ServiceException("留言内容不能为空");
+        }
+
+        return toAjax(feedbackService.insertFeedback(feedback));
     }
 
     /**

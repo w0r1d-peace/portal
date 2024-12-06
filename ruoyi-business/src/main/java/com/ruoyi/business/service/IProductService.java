@@ -46,10 +46,10 @@ public interface IProductService
     /**
      * 批量删除产品
      *
-     * @param ids 需要删除的产品主键集合
+     * @param idList 需要删除的产品主键集合
      * @return 结果
      */
-    public int deleteProductByIds(String ids);
+    public int deleteProductByIds(List<Integer> idList);
 
     /**
      * 删除产品信息

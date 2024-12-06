@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductVo">
-        select id, name, del_flag, create_by, create_time, update_by, update_time from t_product
+        select id, name, del_flag, create_by, create_time, update_by, update_time from t_product where del_flag = 0
     </sql>
 
     <select id="selectProductList" parameterType="Product" resultMap="ProductResult">
@@ -67,9 +67,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from t_product where id = #{id}
     </delete>
 
-    <delete id="deleteProductByIds" parameterType="String">
-        delete from t_product where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+    <delete id="deleteProductByIds" parameterType="java.util.List">
+        update t_product
+        set del_flag = 1
+        where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

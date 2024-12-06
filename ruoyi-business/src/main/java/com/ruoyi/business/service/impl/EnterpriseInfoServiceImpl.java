@@ -1,7 +1,10 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.vo.EnterpriseInfoVO;
 import com.ruoyi.common.utils.DateUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.EnterpriseInfoMapper;
@@ -93,5 +96,22 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
     public int deleteEnterpriseInfoById(Long id)
     {
         return enterpriseInfoMapper.deleteEnterpriseInfoById(id);
+    }
+
+    /**
+     * 获取公司信息
+     * @return
+     */
+    @Override
+    public EnterpriseInfoVO info() {
+        List<EnterpriseInfo> enterpriseInfoList = enterpriseInfoMapper.selectEnterpriseInfoList(new EnterpriseInfo());
+        if (enterpriseInfoList.size() > 0) {
+            EnterpriseInfo enterpriseInfo = enterpriseInfoList.get(0);
+            EnterpriseInfoVO enterpriseInfoVO = new EnterpriseInfoVO();
+            BeanUtils.copyProperties(enterpriseInfo, enterpriseInfoVO);
+            return enterpriseInfoVO;
+        }
+
+        return null;
     }
 }

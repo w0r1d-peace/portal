@@ -74,13 +74,13 @@ public class ProductServiceImpl implements IProductService
     /**
      * 批量删除产品
      *
-     * @param ids 需要删除的产品主键
+     * @param idList 需要删除的产品主键
      * @return 结果
      */
     @Override
-    public int deleteProductByIds(String ids)
+    public int deleteProductByIds(List<Integer> idList)
     {
-        return productMapper.deleteProductByIds(Convert.toStrArray(ids));
+        return productMapper.deleteProductByIds(idList);
     }
 
     /**

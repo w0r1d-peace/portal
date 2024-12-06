@@ -1,22 +1,19 @@
-package com.ruoyi.business.controller;
+package com.ruoyi.web.controller.business;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.domain.Product;
 import com.ruoyi.business.service.IProductService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
@@ -25,28 +22,19 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author tangJM.
  * @date 2024-12-05
  */
-@Controller
+@RestController
 @RequestMapping("/business/product")
 public class ProductController extends BaseController
 {
-    private String prefix = "business/product";
 
     @Autowired
     private IProductService productService;
-
-    @RequiresPermissions("business:product:view")
-    @GetMapping()
-    public String product()
-    {
-        return prefix + "/product";
-    }
 
     /**
      * 查询产品列表
      */
     @RequiresPermissions("business:product:list")
-    @PostMapping("/list")
-    @ResponseBody
+    @GetMapping("/list")
     public TableDataInfo list(Product product)
     {
         startPage();
@@ -55,61 +43,36 @@ public class ProductController extends BaseController
     }
 
     /**
-     * 导出产品列表
-     */
-    @RequiresPermissions("business:product:export")
-    @Log(title = "产品", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(Product product)
-    {
-        List<Product> list = productService.selectProductList(product);
-        ExcelUtil<Product> util = new ExcelUtil<Product>(Product.class);
-        return util.exportExcel(list, "产品数据");
-    }
-
-    /**
-     * 新增产品
-     */
-    @GetMapping("/add")
-    public String add()
-    {
-        return prefix + "/add";
-    }
-
-    /**
      * 新增保存产品
      */
     @RequiresPermissions("business:product:add")
-    @Log(title = "产品", businessType = BusinessType.INSERT)
+    @Log(title = "新增产品", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    @ResponseBody
-    public AjaxResult addSave(Product product)
+    public AjaxResult addSave(@RequestBody Product product)
     {
-        return toAjax(productService.insertProduct(product));
-    }
+        if (StringUtils.isBlank(product.getName())) {
+            throw new ServiceException("产品名称不能为空");
+        }
 
-    /**
-     * 修改产品
-     */
-    @RequiresPermissions("business:product:edit")
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        Product product = productService.selectProductById(id);
-        mmap.put("product", product);
-        return prefix + "/edit";
+        return toAjax(productService.insertProduct(product));
     }
 
     /**
      * 修改保存产品
      */
     @RequiresPermissions("business:product:edit")
-    @Log(title = "产品", businessType = BusinessType.UPDATE)
+    @Log(title = "修改产品", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(Product product)
+    public AjaxResult editSave(@RequestBody Product product)
     {
+        if (product.getId() == null) {
+            throw new ServiceException("ID不能为空");
+        }
+
+        if (StringUtils.isBlank(product.getName())) {
+            throw new ServiceException("产品名称不能为空");
+        }
+
         return toAjax(productService.updateProduct(product));
     }
 
@@ -117,11 +80,14 @@ public class ProductController extends BaseController
      * 删除产品
      */
     @RequiresPermissions("business:product:remove")
-    @Log(title = "产品", businessType = BusinessType.DELETE)
+    @Log(title = "删除产品", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
-        return toAjax(productService.deleteProductByIds(ids));
+        if (dto == null || dto.getIdList().isEmpty()) {
+            throw new ServiceException("请选择要删除的数据");
+        }
+
+        return toAjax(productService.deleteProductByIds(dto.getIdList()));
     }
 }
