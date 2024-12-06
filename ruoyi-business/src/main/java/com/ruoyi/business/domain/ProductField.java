@@ -26,10 +26,6 @@ public class ProductField extends BaseEntity
     @Excel(name = "字段名称")
     private String fieldName;
 
-    /** 字段别名 */
-    @Excel(name = "字段别名")
-    private String fieldAlias;
-
     /** 排序 */
     @Excel(name = "排序")
     private Integer sort;
@@ -71,16 +67,6 @@ public class ProductField extends BaseEntity
         return fieldName;
     }
 
-    public void setFieldAlias(String fieldAlias) 
-    {
-        this.fieldAlias = fieldAlias;
-    }
-
-    public String getFieldAlias() 
-    {
-        return fieldAlias;
-    }
-
     public void setSort(Integer sort) 
     {
         this.sort = sort;
@@ -117,7 +103,6 @@ public class ProductField extends BaseEntity
             .append("id", getId())
             .append("productId", getProductId())
             .append("fieldName", getFieldName())
-            .append("fieldAlias", getFieldAlias())
             .append("sort", getSort())
             .append("isFilter", getIsFilter())
             .append("delFlag", getDelFlag())

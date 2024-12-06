@@ -1,7 +1,9 @@
 package com.ruoyi.business.mapper;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.business.domain.ProductField;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 产品字段配置Mapper接口
@@ -54,8 +56,8 @@ public interface ProductFieldMapper
     /**
      * 批量删除产品字段配置
      *
-     * @param ids 需要删除的数据主键集合
+     * @param idList 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteProductFieldByIds(String[] ids);
+    public int deleteProductFieldByIds(@Param("idList") List<Integer> idList, @Param("updateBy") String updateBy, @Param("updateTime") Date updateTime);
 }

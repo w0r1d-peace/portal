@@ -1,7 +1,10 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ProductMapper;
@@ -54,6 +57,8 @@ public class ProductServiceImpl implements IProductService
     @Override
     public int insertProduct(Product product)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        product.setCreateBy(user.getUserName());
         product.setCreateTime(DateUtils.getNowDate());
         return productMapper.insertProduct(product);
     }
@@ -67,6 +72,8 @@ public class ProductServiceImpl implements IProductService
     @Override
     public int updateProduct(Product product)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        product.setUpdateBy(user.getUserName());
         product.setUpdateTime(DateUtils.getNowDate());
         return productMapper.updateProduct(product);
     }

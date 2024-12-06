@@ -1,22 +1,17 @@
 package com.ruoyi.web.controller.business;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.dto.DeleteDTO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.domain.ProductField;
 import com.ruoyi.business.service.IProductFieldService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
@@ -25,28 +20,19 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author tangJM.
  * @date 2024-12-05
  */
-@Controller
-@RequestMapping("/business/field")
+@RestController
+@RequestMapping("/business/product/field")
 public class ProductFieldController extends BaseController
 {
-    private String prefix = "business/field";
 
     @Autowired
     private IProductFieldService productFieldService;
-
-    @RequiresPermissions("business:field:view")
-    @GetMapping()
-    public String field()
-    {
-        return prefix + "/field";
-    }
 
     /**
      * 查询产品字段配置列表
      */
     @RequiresPermissions("business:field:list")
-    @PostMapping("/list")
-    @ResponseBody
+    @GetMapping("/list")
     public TableDataInfo list(ProductField productField)
     {
         startPage();
@@ -55,60 +41,23 @@ public class ProductFieldController extends BaseController
     }
 
     /**
-     * 导出产品字段配置列表
-     */
-    @RequiresPermissions("business:field:export")
-    @Log(title = "产品字段配置", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(ProductField productField)
-    {
-        List<ProductField> list = productFieldService.selectProductFieldList(productField);
-        ExcelUtil<ProductField> util = new ExcelUtil<ProductField>(ProductField.class);
-        return util.exportExcel(list, "产品字段配置数据");
-    }
-
-    /**
-     * 新增产品字段配置
-     */
-    @GetMapping("/add")
-    public String add()
-    {
-        return prefix + "/add";
-    }
-
-    /**
      * 新增保存产品字段配置
      */
     @RequiresPermissions("business:field:add")
-    @Log(title = "产品字段配置", businessType = BusinessType.INSERT)
+    @Log(title = "新增产品字段配置", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    @ResponseBody
-    public AjaxResult addSave(ProductField productField)
+    public AjaxResult addSave(@RequestBody ProductField productField)
     {
         return toAjax(productFieldService.insertProductField(productField));
-    }
-
-    /**
-     * 修改产品字段配置
-     */
-    @RequiresPermissions("business:field:edit")
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        ProductField productField = productFieldService.selectProductFieldById(id);
-        mmap.put("productField", productField);
-        return prefix + "/edit";
     }
 
     /**
      * 修改保存产品字段配置
      */
     @RequiresPermissions("business:field:edit")
-    @Log(title = "产品字段配置", businessType = BusinessType.UPDATE)
+    @Log(title = "修改产品字段配置", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(ProductField productField)
+    public AjaxResult editSave(@RequestBody ProductField productField)
     {
         return toAjax(productFieldService.updateProductField(productField));
     }
@@ -117,11 +66,11 @@ public class ProductFieldController extends BaseController
      * 删除产品字段配置
      */
     @RequiresPermissions("business:field:remove")
-    @Log(title = "产品字段配置", businessType = BusinessType.DELETE)
+    @Log(title = "删除产品字段配置", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
-        return toAjax(productFieldService.deleteProductFieldByIds(ids));
+        return toAjax(productFieldService.deleteProductFieldByIds(dto.getIdList()));
     }
 }

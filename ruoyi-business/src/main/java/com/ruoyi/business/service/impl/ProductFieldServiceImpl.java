@@ -1,13 +1,17 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ProductFieldMapper;
 import com.ruoyi.business.domain.ProductField;
 import com.ruoyi.business.service.IProductFieldService;
-import com.ruoyi.common.core.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 产品字段配置Service业务层处理
@@ -18,8 +22,14 @@ import com.ruoyi.common.core.text.Convert;
 @Service
 public class ProductFieldServiceImpl implements IProductFieldService
 {
+
+    private final static String FIELD_NAME = "field_name_";
+
     @Autowired
     private ProductFieldMapper productFieldMapper;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 查询产品字段配置
@@ -52,10 +62,20 @@ public class ProductFieldServiceImpl implements IProductFieldService
      * @return 结果
      */
     @Override
-    public int insertProductField(ProductField productField)
+    @Transactional(rollbackFor = Exception.class)
+    public boolean insertProductField(ProductField productField)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        productField.setCreateBy(user.getUserName());
         productField.setCreateTime(DateUtils.getNowDate());
-        return productFieldMapper.insertProductField(productField);
+        productFieldMapper.insertProductField(productField);
+        Long id = productField.getId();
+        String columnName = FIELD_NAME + id;
+        // 根据参数给产品信号表增加字段
+        String alterSql = String.format("ALTER TABLE t_product_model ADD %s VARCHAR(255) COMMENT '%s'", columnName, productField.getFieldName());
+        jdbcTemplate.execute(alterSql);
+
+        return true;
     }
 
     /**
@@ -65,22 +85,34 @@ public class ProductFieldServiceImpl implements IProductFieldService
      * @return 结果
      */
     @Override
-    public int updateProductField(ProductField productField)
+    public boolean updateProductField(ProductField productField)
     {
+        SysUser user = ShiroUtils.getSysUser();
+        productField.setUpdateBy(user.getUserName());
         productField.setUpdateTime(DateUtils.getNowDate());
-        return productFieldMapper.updateProductField(productField);
+        productFieldMapper.updateProductField(productField);
+        return true;
     }
 
     /**
      * 批量删除产品字段配置
      *
-     * @param ids 需要删除的产品字段配置主键
+     * @param idList 需要删除的产品字段配置主键
      * @return 结果
      */
     @Override
-    public int deleteProductFieldByIds(String ids)
+    public boolean deleteProductFieldByIds(List<Integer> idList)
     {
-        return productFieldMapper.deleteProductFieldByIds(Convert.toStrArray(ids));
+        SysUser user = ShiroUtils.getSysUser();
+        productFieldMapper.deleteProductFieldByIds(idList, user.getUserName(), DateUtils.getNowDate());
+
+        for (Integer id : idList) {
+            String columnName = FIELD_NAME + id;
+            String dropSql = String.format("ALTER TABLE t_product_model DROP COLUMN %s", columnName);
+            jdbcTemplate.execute(dropSql);
+        }
+
+        return true;
     }
 
     /**

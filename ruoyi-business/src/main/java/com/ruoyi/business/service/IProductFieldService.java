@@ -33,7 +33,7 @@ public interface IProductFieldService
      * @param productField 产品字段配置
      * @return 结果
      */
-    public int insertProductField(ProductField productField);
+    public boolean insertProductField(ProductField productField);
 
     /**
      * 修改产品字段配置
@@ -41,15 +41,15 @@ public interface IProductFieldService
      * @param productField 产品字段配置
      * @return 结果
      */
-    public int updateProductField(ProductField productField);
+    public boolean updateProductField(ProductField productField);
 
     /**
      * 批量删除产品字段配置
      *
-     * @param ids 需要删除的产品字段配置主键集合
+     * @param idList 需要删除的产品字段配置主键集合
      * @return 结果
      */
-    public int deleteProductFieldByIds(String ids);
+    public boolean deleteProductFieldByIds(List<Integer> idList);
 
     /**
      * 删除产品字段配置信息

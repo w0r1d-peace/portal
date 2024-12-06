@@ -8,7 +8,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="productId"    column="product_id"    />
         <result property="fieldName"    column="field_name"    />
-        <result property="fieldAlias"    column="field_alias"    />
         <result property="sort"    column="sort"    />
         <result property="isFilter"    column="is_filter"    />
         <result property="delFlag"    column="del_flag"    />
@@ -19,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductFieldVo">
-        select id, product_id, field_name, field_alias, sort, is_filter, del_flag, create_by, create_time, update_by, update_time from t_product_field
+        select id, product_id, field_name, sort, is_filter, del_flag, create_by, create_time, update_by, update_time from t_product_field
     </sql>
 
     <select id="selectProductFieldList" parameterType="ProductField" resultMap="ProductFieldResult">
@@ -27,7 +26,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="productId != null "> and product_id = #{productId}</if>
             <if test="fieldName != null  and fieldName != ''"> and field_name like concat('%', #{fieldName}, '%')</if>
-            <if test="fieldAlias != null  and fieldAlias != ''"> and field_alias = #{fieldAlias}</if>
             <if test="sort != null "> and sort = #{sort}</if>
             <if test="isFilter != null "> and is_filter = #{isFilter}</if>
         </where>
@@ -43,7 +41,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="productId != null">product_id,</if>
             <if test="fieldName != null and fieldName != ''">field_name,</if>
-            <if test="fieldAlias != null and fieldAlias != ''">field_alias,</if>
             <if test="sort != null">sort,</if>
             <if test="isFilter != null">is_filter,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -55,7 +52,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="productId != null">#{productId},</if>
             <if test="fieldName != null and fieldName != ''">#{fieldName},</if>
-            <if test="fieldAlias != null and fieldAlias != ''">#{fieldAlias},</if>
             <if test="sort != null">#{sort},</if>
             <if test="isFilter != null">#{isFilter},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -71,7 +67,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="productId != null">product_id = #{productId},</if>
             <if test="fieldName != null and fieldName != ''">field_name = #{fieldName},</if>
-            <if test="fieldAlias != null and fieldAlias != ''">field_alias = #{fieldAlias},</if>
             <if test="sort != null">sort = #{sort},</if>
             <if test="isFilter != null">is_filter = #{isFilter},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
@@ -88,8 +83,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductFieldByIds" parameterType="String">
-        delete from t_product_field where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+        update t_product_field set del_flag = 1, update_by = #{updateBy}, update_time #{updateTime} where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
