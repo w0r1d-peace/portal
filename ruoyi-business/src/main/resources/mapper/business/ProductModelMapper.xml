@@ -90,8 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductModelByIds" parameterType="String">
-        delete from t_product_model where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+        update t_product_model set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

@@ -1,22 +1,20 @@
 package com.ruoyi.web.controller.business;
 
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.common.exception.ServiceException;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.domain.ProductModel;
 import com.ruoyi.business.service.IProductModelService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
@@ -25,21 +23,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author tangJM.
  * @date 2024-12-05
  */
-@Controller
+@RestController
 @RequestMapping("/business/model")
 public class ProductModelController extends BaseController
 {
-    private String prefix = "business/model";
 
     @Autowired
     private IProductModelService productModelService;
-
-    @RequiresPermissions("business:model:view")
-    @GetMapping()
-    public String model()
-    {
-        return prefix + "/model";
-    }
 
     /**
      * 查询产品型号列表
@@ -55,73 +45,57 @@ public class ProductModelController extends BaseController
     }
 
     /**
-     * 导出产品型号列表
-     */
-    @RequiresPermissions("business:model:export")
-    @Log(title = "产品型号", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(ProductModel productModel)
-    {
-        List<ProductModel> list = productModelService.selectProductModelList(productModel);
-        ExcelUtil<ProductModel> util = new ExcelUtil<ProductModel>(ProductModel.class);
-        return util.exportExcel(list, "产品型号数据");
-    }
-
-    /**
-     * 新增产品型号
-     */
-    @GetMapping("/add")
-    public String add()
-    {
-        return prefix + "/add";
-    }
-
-    /**
      * 新增保存产品型号
      */
     @RequiresPermissions("business:model:add")
-    @Log(title = "产品型号", businessType = BusinessType.INSERT)
+    @Log(title = "新增产品型号", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    @ResponseBody
-    public AjaxResult addSave(ProductModel productModel)
+    public AjaxResult addSave(@RequestBody Map<String, Object> info)
     {
-        return toAjax(productModelService.insertProductModel(productModel));
-    }
+        if (info == null) {
+            throw new ServiceException("参数不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("productId"))) {
+            throw new ServiceException("产品ID不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("modelNumber"))) {
+            throw new ServiceException("型号不能为空");
+        }
 
-    /**
-     * 修改产品型号
-     */
-    @RequiresPermissions("business:model:edit")
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        ProductModel productModel = productModelService.selectProductModelById(id);
-        mmap.put("productModel", productModel);
-        return prefix + "/edit";
+        return toAjax(productModelService.insertProductModel(info));
     }
 
     /**
      * 修改保存产品型号
      */
     @RequiresPermissions("business:model:edit")
-    @Log(title = "产品型号", businessType = BusinessType.UPDATE)
+    @Log(title = "修改产品型号", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(ProductModel productModel)
+    public AjaxResult editSave(@RequestBody Map<String, Object> info)
     {
-        return toAjax(productModelService.updateProductModel(productModel));
+        if (info == null) {
+            throw new ServiceException("参数不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("id"))) {
+            throw new ServiceException("ID不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("productId"))) {
+            throw new ServiceException("产品ID不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("modelNumber"))) {
+            throw new ServiceException("型号不能为空");
+        }
+        return toAjax(productModelService.updateProductModel(info));
     }
 
     /**
      * 删除产品型号
      */
     @RequiresPermissions("business:model:remove")
-    @Log(title = "产品型号", businessType = BusinessType.DELETE)
+    @Log(title = "删除产品型号", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
-        return toAjax(productModelService.deleteProductModelByIds(ids));
+        return toAjax(productModelService.deleteProductModelByIds(dto.getIdList()));
     }
 }

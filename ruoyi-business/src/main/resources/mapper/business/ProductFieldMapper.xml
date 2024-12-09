@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductFieldByIds" parameterType="String">
-        update t_product_field set del_flag = 1, update_by = #{updateBy}, update_time #{updateTime} where id in
+        update t_product_field set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
         <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>

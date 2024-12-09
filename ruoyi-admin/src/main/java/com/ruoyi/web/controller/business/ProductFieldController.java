@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.business;
 import java.util.List;
 
 import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +50,18 @@ public class ProductFieldController extends BaseController
     @PostMapping("/add")
     public AjaxResult addSave(@RequestBody ProductField productField)
     {
+        if (productField.getProductId() == null) {
+            throw new ServiceException("产品ID不能为空");
+        }
+        if (StringUtils.isBlank(productField.getFieldName())) {
+            throw new ServiceException("字段名称不能为空");
+        }
+        if (productField.getSort() == null) {
+            throw new ServiceException("排序不能为空");
+        }
+        if (productField.getIsFilter() == null) {
+            throw new ServiceException("是否筛选不能为空");
+        }
         return toAjax(productFieldService.insertProductField(productField));
     }
 
@@ -59,6 +73,21 @@ public class ProductFieldController extends BaseController
     @PostMapping("/edit")
     public AjaxResult editSave(@RequestBody ProductField productField)
     {
+        if (productField.getId() == null) {
+            throw new ServiceException("ID不能为空");
+        }
+        if (productField.getProductId() == null) {
+            throw new ServiceException("产品ID不能为空");
+        }
+        if (StringUtils.isBlank(productField.getFieldName())) {
+            throw new ServiceException("字段名称不能为空");
+        }
+        if (productField.getSort() == null) {
+            throw new ServiceException("排序不能为空");
+        }
+        if (productField.getIsFilter() == null) {
+            throw new ServiceException("是否筛选不能为空");
+        }
         return toAjax(productFieldService.updateProductField(productField));
     }
 
@@ -71,6 +100,9 @@ public class ProductFieldController extends BaseController
     @ResponseBody
     public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
+        if (dto.getIdList() == null || dto.getIdList().isEmpty()) {
+            throw new ServiceException("请选择要删除的数据");
+        }
         return toAjax(productFieldService.deleteProductFieldByIds(dto.getIdList()));
     }
 }
