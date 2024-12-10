@@ -59,5 +59,5 @@ public interface ProductFieldMapper
      * @param idList 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteProductFieldByIds(@Param("idList") List<Integer> idList, @Param("updateBy") String updateBy, @Param("updateTime") Date updateTime);
+    public int deleteProductFieldByIds(@Param("idList") List<Integer> idList, @Param("updateBy") String updateBy);
 }

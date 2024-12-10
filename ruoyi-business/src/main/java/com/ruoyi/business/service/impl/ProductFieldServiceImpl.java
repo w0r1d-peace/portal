@@ -2,6 +2,7 @@ package com.ruoyi.business.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.business.util.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ShiroUtils;
@@ -22,9 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductFieldServiceImpl implements IProductFieldService
 {
-
-    private final static String FIELD_NAME = "field_name_";
-
     @Autowired
     private ProductFieldMapper productFieldMapper;
 
@@ -70,7 +68,7 @@ public class ProductFieldServiceImpl implements IProductFieldService
         productField.setCreateTime(DateUtils.getNowDate());
         productFieldMapper.insertProductField(productField);
         Long id = productField.getId();
-        String columnName = FIELD_NAME + id;
+        String columnName = Constants.FIELD_NAME_PREFIX + id;
         // 根据参数给产品信号表增加字段
         String alterSql = String.format("ALTER TABLE t_product_model ADD %s VARCHAR(255) COMMENT '%s'", columnName, productField.getFieldName());
         jdbcTemplate.execute(alterSql);
@@ -104,10 +102,10 @@ public class ProductFieldServiceImpl implements IProductFieldService
     public boolean deleteProductFieldByIds(List<Integer> idList)
     {
         SysUser user = ShiroUtils.getSysUser();
-        productFieldMapper.deleteProductFieldByIds(idList, user.getUserName(), DateUtils.getNowDate());
+        productFieldMapper.deleteProductFieldByIds(idList, user.getUserName());
 
         for (Integer id : idList) {
-            String columnName = FIELD_NAME + id;
+            String columnName = Constants.FIELD_NAME_PREFIX + id;
             String dropSql = String.format("ALTER TABLE t_product_model DROP COLUMN %s", columnName);
             jdbcTemplate.execute(dropSql);
         }
