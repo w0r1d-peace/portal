@@ -27,7 +27,7 @@ public interface IProductModelService
      * @param productModel 产品型号
      * @return 产品型号集合
      */
-    public List<ProductModel> selectProductModelList(ProductModel productModel);
+    public List<Map<String, Object>> selectProductModelList(ProductModel productModel);
 
     /**
      * 新增产品型号

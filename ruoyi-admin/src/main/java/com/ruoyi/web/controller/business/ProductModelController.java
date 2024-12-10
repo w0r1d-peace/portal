@@ -24,7 +24,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2024-12-05
  */
 @RestController
-@RequestMapping("/business/model")
+@RequestMapping("/business/product/model")
 public class ProductModelController extends BaseController
 {
 
@@ -35,12 +35,15 @@ public class ProductModelController extends BaseController
      * 查询产品型号列表
      */
     @RequiresPermissions("business:model:list")
-    @PostMapping("/list")
-    @ResponseBody
+    @GetMapping("/list")
     public TableDataInfo list(ProductModel productModel)
     {
+        if (productModel.getProductId() == null) {
+            throw new ServiceException("产品ID不能为空");
+        }
+
         startPage();
-        List<ProductModel> list = productModelService.selectProductModelList(productModel);
+        List<Map<String, Object>> list = productModelService.selectProductModelList(productModel);
         return getDataTable(list);
     }
 

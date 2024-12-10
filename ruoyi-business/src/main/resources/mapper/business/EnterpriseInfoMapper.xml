@@ -45,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zipCode != null  and zipCode != ''"> and zip_code = #{zipCode}</if>
             <if test="icpNumber != null  and icpNumber != ''"> and icp_number = #{icpNumber}</if>
             <if test="website != null  and website != ''"> and website = #{website}</if>
+            and del_flag = '0'
         </where>
     </select>
     

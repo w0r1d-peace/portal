@@ -2,6 +2,7 @@ package com.ruoyi.business.service;
 
 import java.util.List;
 import com.ruoyi.business.domain.ProductField;
+import com.ruoyi.business.domain.vo.ProductFieldVO;
 
 /**
  * 产品字段配置Service接口
@@ -58,4 +59,11 @@ public interface IProductFieldService
      * @return 结果
      */
     public int deleteProductFieldById(Long id);
+
+    /**
+     * 根据ID获取产品字段
+     * @param productId
+     * @return
+     */
+    List<ProductFieldVO> getByProductId(Long productId);
 }

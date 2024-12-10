@@ -28,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fieldName != null  and fieldName != ''"> and field_name like concat('%', #{fieldName}, '%')</if>
             <if test="sort != null "> and sort = #{sort}</if>
             <if test="isFilter != null "> and is_filter = #{isFilter}</if>
+            and del_flag = '0'
         </where>
     </select>
     

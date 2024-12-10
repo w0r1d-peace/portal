@@ -43,6 +43,20 @@ public class ProductFieldController extends BaseController
     }
 
     /**
+     * 根据产品ID查询产品字段
+     */
+    @RequiresPermissions("business:field:getByProductId")
+    @GetMapping("/getByProductId")
+    public AjaxResult getByProductId(Long productId)
+    {
+        if (productId == null) {
+            throw new ServiceException("产品ID不能为空");
+        }
+
+        return AjaxResult.success(productFieldService.getByProductId(productId));
+    }
+
+    /**
      * 新增保存产品字段配置
      */
     @RequiresPermissions("business:field:add")
@@ -97,7 +111,6 @@ public class ProductFieldController extends BaseController
     @RequiresPermissions("business:field:remove")
     @Log(title = "删除产品字段配置", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
-    @ResponseBody
     public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
         if (dto.getIdList() == null || dto.getIdList().isEmpty()) {
