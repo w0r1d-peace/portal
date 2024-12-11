@@ -24,10 +24,10 @@ public interface IProductModelService
     /**
      * 查询产品型号列表
      *
-     * @param productModel 产品型号
+     * @param info
      * @return 产品型号集合
      */
-    public List<Map<String, Object>> selectProductModelList(ProductModel productModel);
+    public List<Map<String, Object>> selectProductModelList(Map<String, Object> info);
 
     /**
      * 新增产品型号
@@ -60,4 +60,11 @@ public interface IProductModelService
      * @return 结果
      */
     public int deleteProductModelById(Long id);
+
+    /**
+     * 获取筛选数据
+     * @param info
+     * @return
+     */
+    Map<String, List<String>> getFilterData(Map<String, Object> info);
 }

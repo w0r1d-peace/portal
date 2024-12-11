@@ -1,13 +1,13 @@
 package com.ruoyi.business.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.ruoyi.business.domain.ProductField;
 import com.ruoyi.business.mapper.ProductFieldMapper;
 import com.ruoyi.business.util.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,25 +50,44 @@ public class ProductModelServiceImpl implements IProductModelService
     /**
      * 查询产品型号列表
      *
-     * @param productModel 产品型号
+     * @param info
      * @return 产品型号
      */
     @Override
-    public List<Map<String, Object>> selectProductModelList(ProductModel productModel)
+    public List<Map<String, Object>> selectProductModelList(Map<String, Object> info)
     {
-        Long productId = productModel.getProductId();
+        Long productId = Long.parseLong(info.get("productId").toString());
         List<ProductField> productFieldList = getProductFieldListByProductId(productId);
 
-
-        StringBuilder sb = new StringBuilder();
+        StringBuilder showColumns = new StringBuilder();
         for (ProductField productField : productFieldList) {
             String key = Constants.COLUMN_NAME_PREFIX + productField.getId();
-            sb.append(", ").append(key);
+            showColumns.append(", ").append(key);
         }
 
-        String queryProductModelSql = String.format("SELECT id, product_id AS productId, model_number AS modelNumber, pdf_url AS pdfUrl, is_in_stock AS isInStock, is_new AS isNew, create_by AS createBy, create_time AS createTime %s FROM t_product_model WHERE product_id = ? AND del_flag = 0", sb);
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(queryProductModelSql, productId);
+        StringBuilder filterColumns = new StringBuilder();
+        List<Object> paramsList = new ArrayList<>();
 
+        info.remove("productId");
+        // 动态生成查询条件
+        info.forEach((k, v) -> {
+            if (v != null && !v.toString().isEmpty()) {
+                String[] values = v.toString().split(",");
+                filterColumns.append(" AND ").append(k).append(" IN (");
+                String placeholders = String.join(",", Collections.nCopies(values.length, "?"));
+                filterColumns.append(placeholders).append(")");
+                paramsList.addAll(Arrays.asList(values));
+            }
+        });
+
+        String queryProductModelSql = String.format(
+                "SELECT id, product_id AS productId, model_number AS modelNumber, pdf_url AS pdfUrl, is_in_stock AS isInStock, is_new AS isNew, create_by AS createBy, create_time AS createTime %s FROM t_product_model WHERE product_id = ? %s AND del_flag = 0",
+                showColumns, filterColumns
+        );
+
+        paramsList.add(0, productId);
+
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(queryProductModelSql, paramsList.toArray());
         return mapList;
 
     }
@@ -122,14 +141,19 @@ public class ProductModelServiceImpl implements IProductModelService
     @Override
     public boolean updateProductModel(Map<String, Object> info)
     {
+        Long id = Long.parseLong(info.get("id").toString());
+        ProductModel productModel = productModelMapper.selectProductModelById(id);
+        if (productModel == null) {
+            throw new ServiceException("产品型号不存在");
+        }
+
         SysUser user = ShiroUtils.getSysUser();
         String userName = user.getUserName();
-        Long productId = Long.parseLong(info.get("productId").toString());
-        List<ProductField> productFieldList = getProductFieldListByProductId(productId);
+        List<ProductField> productFieldList = getProductFieldListByProductId(productModel.getProductId());
 
         NamedParameterJdbcTemplate namedJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
         Map<String, Object> params = new HashMap<>();
-        params.put("id", info.get("id"));
+        params.put("id", id);
         params.put("modelNumber", info.get("modelNumber"));
         params.put("pdfUrl", info.get("pdfUrl"));
         params.put("isInStock", info.get("isInStock"));
@@ -174,6 +198,81 @@ public class ProductModelServiceImpl implements IProductModelService
         return productModelMapper.deleteProductModelById(id);
     }
 
+    /**
+     * 获取筛选数据
+     * @param info
+     * @return
+     */
+    @Override
+    public Map<String, List<String>> getFilterData(Map<String, Object> info) {
+        Long productId = Long.parseLong(info.get("productId").toString());
+        ProductField productField = new ProductField();
+        productField.setProductId(productId);
+        productField.setIsFilter(1);
+        List<ProductField> productFieldList = productFieldMapper.selectProductFieldList(productField);
+
+        if (productFieldList.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        StringBuilder showColumns = new StringBuilder();
+        String querySql = "SELECT %s FROM t_product_model WHERE product_id = ? %s GROUP BY %s";
+        for (ProductField field : productFieldList) {
+            Long id = field.getId();
+            String columnName = Constants.COLUMN_NAME_PREFIX + id;
+            showColumns.append(columnName).append(", ");
+        }
+
+        StringBuilder filterColumns = new StringBuilder();
+        List<Object> paramsList = new ArrayList<>();
+
+        info.remove("productId");
+        // 动态生成查询条件
+        info.forEach((k, v) -> {
+            if (v != null && !v.toString().isEmpty()) {
+                String[] values = v.toString().split(",");
+                filterColumns.append(" AND ").append(k).append(" IN (");
+                String placeholders = String.join(",", Collections.nCopies(values.length, "?"));
+                filterColumns.append(placeholders).append(")");
+                paramsList.addAll(Arrays.asList(values));
+            }
+        });
+
+        String showColumnsStr = showColumns.substring(0, showColumns.length() - 2);
+        querySql = String.format(querySql, showColumnsStr, filterColumns, showColumnsStr);
+
+        paramsList.add(0, productId);
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(querySql, paramsList.toArray());
+
+        // 存储去重后的结果
+        Map<String, Set<String>> uniqueColumns = new LinkedHashMap<>();
+
+        // 遍历数据列表并对每列进行去重
+        for (Map<String, Object> row : mapList) {
+            for (Map.Entry<String, Object> entry : row.entrySet()) {
+                String columnName = entry.getKey();
+                String value = entry.getValue().toString(); // 确保转为字符串
+
+                // 如果列名未在结果中，初始化一个Set
+                uniqueColumns.putIfAbsent(columnName, new LinkedHashSet<>());
+
+                // 将当前值添加到对应列的Set中
+                uniqueColumns.get(columnName).add(value);
+            }
+        }
+
+        // 转换为目标格式：Map<String, List<String>>
+        Map<String, List<String>> result = uniqueColumns.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> new ArrayList<>(entry.getValue()),
+                        (e1, e2) -> e1, // 处理冲突
+                        LinkedHashMap::new // 保持顺序
+                ));
+
+        return result;
+    }
+
 
     /**
      * 根据产品ID获取产品型号列表
@@ -183,7 +282,6 @@ public class ProductModelServiceImpl implements IProductModelService
     private List<ProductField> getProductFieldListByProductId(Long productId) {
         ProductField productField = new ProductField();
         productField.setProductId(productId);
-        productField.setDelFlag("0");
         return productFieldMapper.selectProductFieldList(productField);
     }
 }

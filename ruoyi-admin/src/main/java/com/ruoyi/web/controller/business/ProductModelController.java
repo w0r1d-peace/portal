@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.business.domain.ProductModel;
 import com.ruoyi.business.service.IProductModelService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -25,8 +24,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/business/product/model")
-public class ProductModelController extends BaseController
-{
+public class ProductModelController extends BaseController {
 
     @Autowired
     private IProductModelService productModelService;
@@ -35,15 +33,18 @@ public class ProductModelController extends BaseController
      * 查询产品型号列表
      */
     @RequiresPermissions("business:model:list")
-    @GetMapping("/list")
-    public TableDataInfo list(ProductModel productModel)
-    {
-        if (productModel.getProductId() == null) {
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody Map<String, Object> info) {
+        if (info == null) {
+            throw new ServiceException("参数不能为空");
+        }
+
+        if (ObjectUtils.isEmpty(info.get("productId"))) {
             throw new ServiceException("产品ID不能为空");
         }
 
         startPage();
-        List<Map<String, Object>> list = productModelService.selectProductModelList(productModel);
+        List<Map<String, Object>> list = productModelService.selectProductModelList(info);
         return getDataTable(list);
     }
 
@@ -53,8 +54,7 @@ public class ProductModelController extends BaseController
     @RequiresPermissions("business:model:add")
     @Log(title = "新增产品型号", businessType = BusinessType.INSERT)
     @PostMapping("/add")
-    public AjaxResult addSave(@RequestBody Map<String, Object> info)
-    {
+    public AjaxResult addSave(@RequestBody Map<String, Object> info) {
         if (info == null) {
             throw new ServiceException("参数不能为空");
         }
@@ -74,16 +74,12 @@ public class ProductModelController extends BaseController
     @RequiresPermissions("business:model:edit")
     @Log(title = "修改产品型号", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
-    public AjaxResult editSave(@RequestBody Map<String, Object> info)
-    {
+    public AjaxResult editSave(@RequestBody Map<String, Object> info) {
         if (info == null) {
             throw new ServiceException("参数不能为空");
         }
         if (ObjectUtils.isEmpty(info.get("id"))) {
             throw new ServiceException("ID不能为空");
-        }
-        if (ObjectUtils.isEmpty(info.get("productId"))) {
-            throw new ServiceException("产品ID不能为空");
         }
         if (ObjectUtils.isEmpty(info.get("modelNumber"))) {
             throw new ServiceException("型号不能为空");
@@ -96,9 +92,25 @@ public class ProductModelController extends BaseController
      */
     @RequiresPermissions("business:model:remove")
     @Log(title = "删除产品型号", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
-    public AjaxResult remove(@RequestBody DeleteDTO dto)
-    {
+    @PostMapping("/remove")
+    public AjaxResult remove(@RequestBody DeleteDTO dto) {
         return toAjax(productModelService.deleteProductModelByIds(dto.getIdList()));
+    }
+
+    /**
+     * 获取筛选数据
+     */
+    @RequiresPermissions("business:model:getFilterData")
+    @PostMapping("/getFilterData")
+    public AjaxResult getFilterData(@RequestBody Map<String, Object> info) {
+        if (info == null) {
+            throw new ServiceException("参数不能为空");
+        }
+
+        if (ObjectUtils.isEmpty(info.get("productId"))) {
+            throw new ServiceException("产品ID不能为空");
+        }
+
+        return AjaxResult.success(productModelService.getFilterData(info));
     }
 }

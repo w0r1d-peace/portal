@@ -292,6 +292,9 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/captcha/captchaImage**", "anon");
         filterChainDefinitionMap.put("/business/info", "anon");
         filterChainDefinitionMap.put("/business/feedback/add", "anon");
+        filterChainDefinitionMap.put("/business/product/model/getFilterData", "anon");
+        filterChainDefinitionMap.put("/business/product/field/getByProductId", "anon");
+        filterChainDefinitionMap.put("business/product/model/list", "anon");
         // 匿名访问不鉴权注解列表
         List<String> permitAllUrl = SpringUtils.getBean(PermitAllUrlProperties.class).getUrls();
         if (StringUtils.isNotEmpty(permitAllUrl))
