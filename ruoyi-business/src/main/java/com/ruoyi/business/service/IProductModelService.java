@@ -67,4 +67,11 @@ public interface IProductModelService
      * @return
      */
     Map<String, List<String>> getFilterData(Map<String, Object> info);
+
+    /**
+     * 搜索
+     * @param keyword
+     * @return
+     */
+     Object search(String keyword);
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ruoyi.business.domain.dto.DeleteDTO;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,5 +113,19 @@ public class ProductModelController extends BaseController {
         }
 
         return AjaxResult.success(productModelService.getFilterData(info));
+    }
+
+
+    /**
+     * 搜索
+     */
+    @RequiresPermissions("business:model:search")
+    @GetMapping("/search")
+    public AjaxResult search(String keyword) {
+        if (StringUtils.isBlank(keyword)) {
+            throw new ServiceException("关键字不能为空");
+        }
+
+        return AjaxResult.success(productModelService.search(keyword));
     }
 }

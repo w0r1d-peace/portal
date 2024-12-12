@@ -81,7 +81,7 @@ public class ProductModelServiceImpl implements IProductModelService
         });
 
         String queryProductModelSql = String.format(
-                "SELECT id, product_id AS productId, model_number AS modelNumber, pdf_url AS pdfUrl, is_in_stock AS isInStock, is_new AS isNew, create_by AS createBy, create_time AS createTime %s FROM t_product_model WHERE product_id = ? %s AND del_flag = 0",
+                "SELECT id, product_id AS productId, model_number AS modelNumber, pdf_file_id AS pdfFileId, is_in_stock AS isInStock, is_new AS isNew, create_by AS createBy, create_time AS createTime %s FROM t_product_model WHERE product_id = ? %s AND del_flag = 0",
                 showColumns, filterColumns
         );
 
@@ -111,11 +111,11 @@ public class ProductModelServiceImpl implements IProductModelService
         Map<String, Object> params = new HashMap<>();
         params.put("productId", info.get("productId"));
         params.put("modelNumber", info.get("modelNumber"));
-        params.put("pdfUrl", info.get("pdfUrl"));
+        params.put("pdfFileId", info.get("pdfFileId"));
         params.put("isInStock", info.get("isInStock"));
         params.put("isNew", info.get("isNew"));
         params.put("createBy", userName);
-        StringBuilder insertSqlSb = new StringBuilder("INSERT INTO t_product_model(`product_id`, `model_number`, `pdf_url`, `is_in_stock`, `is_new`, `del_flag`, `create_by`, `create_time` %s) VALUES (:productId, :modelNumber, :pdfUrl, :isInStock, :isNew, '0', :createBy, NOW() %s)");
+        StringBuilder insertSqlSb = new StringBuilder("INSERT INTO t_product_model(`product_id`, `model_number`, `pdf_file_id`, `is_in_stock`, `is_new`, `del_flag`, `create_by`, `create_time` %s) VALUES (:productId, :modelNumber, :pdfFileId, :isInStock, :isNew, '0', :createBy, NOW() %s)");
         StringBuilder fieldSqlSb = new StringBuilder();
         StringBuilder valueSqlSb = new StringBuilder();
         for (ProductField productField : productFieldList) {
@@ -155,11 +155,11 @@ public class ProductModelServiceImpl implements IProductModelService
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         params.put("modelNumber", info.get("modelNumber"));
-        params.put("pdfUrl", info.get("pdfUrl"));
+        params.put("pdfFileId", info.get("pdfFileId"));
         params.put("isInStock", info.get("isInStock"));
         params.put("isNew", info.get("isNew"));
         params.put("updateBy", userName);
-        StringBuilder updateSqlSb = new StringBuilder("UPDATE t_product_model SET model_number=:modelNumber, pdf_url=:pdfUrl, is_in_stock=:isInStock, is_new=:isNew, update_by=:updateBy, update_time=NOW() %s WHERE id=:id");
+        StringBuilder updateSqlSb = new StringBuilder("UPDATE t_product_model SET model_number=:modelNumber, pdf_file_id=:pdfFileId, is_in_stock=:isInStock, is_new=:isNew, update_by=:updateBy, update_time=NOW() %s WHERE id=:id");
         StringBuilder fieldValueSqlSb = new StringBuilder();
         for (ProductField productField : productFieldList) {
             String key = Constants.COLUMN_NAME_PREFIX + productField.getId();
@@ -271,6 +271,11 @@ public class ProductModelServiceImpl implements IProductModelService
                 ));
 
         return result;
+    }
+
+    @Override
+    public Object search(String keyword) {
+        return null;
     }
 
 

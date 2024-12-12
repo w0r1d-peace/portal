@@ -26,9 +26,9 @@ public class ProductModel extends BaseEntity
     @Excel(name = "型号编号")
     private String modelNumber;
 
-    /** pdf */
-    @Excel(name = "pdf")
-    private String pdfUrl;
+    /** pdf文件ID */
+    @Excel(name = "pdf文件ID")
+    private Integer pdfFileId;
 
     /** 是否有库存，布尔值，1 表示有库存 */
     @Excel(name = "是否有库存，布尔值，1 表示有库存")
@@ -71,17 +71,15 @@ public class ProductModel extends BaseEntity
         return modelNumber;
     }
 
-    public void setPdfUrl(String pdfUrl) 
-    {
-        this.pdfUrl = pdfUrl;
+    public Integer getPdfFileId() {
+        return pdfFileId;
     }
 
-    public String getPdfUrl() 
-    {
-        return pdfUrl;
+    public void setPdfFileId(Integer pdfFileId) {
+        this.pdfFileId = pdfFileId;
     }
 
-    public void setIsInStock(Integer isInStock) 
+    public void setIsInStock(Integer isInStock)
     {
         this.isInStock = isInStock;
     }
@@ -117,7 +115,7 @@ public class ProductModel extends BaseEntity
             .append("id", getId())
             .append("productId", getProductId())
             .append("modelNumber", getModelNumber())
-            .append("pdfUrl", getPdfUrl())
+            .append("pdfFileId", getPdfFileId())
             .append("isInStock", getIsInStock())
             .append("isNew", getIsNew())
             .append("delFlag", getDelFlag())
