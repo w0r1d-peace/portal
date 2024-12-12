@@ -163,4 +163,14 @@ public class FileServiceImpl implements IFileService
         }
         return generatedIds;
     }
+
+    /**
+     * 根据文件ID获取文件
+     * @param id
+     * @return
+     */
+    @Override
+    public File getById(Long id) {
+        return fileMapper.selectFileById(id);
+    }
 }

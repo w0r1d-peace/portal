@@ -22,6 +22,10 @@ public class Product extends BaseEntity
     @Excel(name = "产品名称")
     private String name;
 
+    /** 产品目录 */
+    @Excel(name = "产品目录")
+    private String catalogue;
+
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 
@@ -45,7 +49,15 @@ public class Product extends BaseEntity
         return name;
     }
 
-    public void setDelFlag(String delFlag) 
+    public String getCatalogue() {
+        return catalogue;
+    }
+
+    public void setCatalogue(String catalogue) {
+        this.catalogue = catalogue;
+    }
+
+    public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
     }
@@ -60,6 +72,7 @@ public class Product extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
+            .append("catalogue", getCatalogue())
             .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())

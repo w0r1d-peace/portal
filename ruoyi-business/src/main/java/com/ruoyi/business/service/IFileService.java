@@ -66,4 +66,11 @@ public interface IFileService
      * @return
      */
     List<Long> uploadMultiple(MultipartFile[] files);
+
+    /**
+     * 根据文件ID获取文件信息
+     * @param id
+     * @return
+     */
+    File getById(Long id);
 }
