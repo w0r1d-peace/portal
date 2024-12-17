@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ProductModelMapper">
+    
+    <resultMap type="ProductModel" id="ProductModelResult">
+        <result property="id"    column="id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="modelNumber"    column="model_number"    />
+        <result property="pdfFileId"    column="pdf_file_id"    />
+        <result property="isInStock"    column="is_in_stock"    />
+        <result property="isNew"    column="is_new"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectProductModelVo">
+        select id, product_id, model_number, pdf_file_id, is_in_stock, is_new, del_flag, create_by, create_time, update_by, update_time from t_product_model
+    </sql>
+
+    <select id="selectProductModelList" parameterType="ProductModel" resultMap="ProductModelResult">
+        <include refid="selectProductModelVo"/>
+        <where>  
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="modelNumber != null  and modelNumber != ''"> and model_number = #{modelNumber}</if>
+            <if test="pdfFileId != null  and pdfFileId != ''"> and pdf_file_id = #{pdfFileId}</if>
+            <if test="isInStock != null "> and is_in_stock = #{isInStock}</if>
+            <if test="isNew != null "> and is_new = #{isNew}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectProductModelById" parameterType="Long" resultMap="ProductModelResult">
+        <include refid="selectProductModelVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductModel" parameterType="ProductModel">
+        insert into t_product_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="modelNumber != null and modelNumber != ''">model_number,</if>
+            <if test="pdfFileId != null">pdf_file_id,</if>
+            <if test="isInStock != null">is_in_stock,</if>
+            <if test="isNew != null">is_new,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="modelNumber != null and modelNumber != ''">#{modelNumber},</if>
+            <if test="pdfFileId != null">#{pdfFileId},</if>
+            <if test="isInStock != null">#{isInStock},</if>
+            <if test="isNew != null">#{isNew},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductModel" parameterType="ProductModel">
+        update t_product_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="modelNumber != null and modelNumber != ''">model_number = #{modelNumber},</if>
+            <if test="pdfFileId != null">pdf_file_id = #{pdfFileId},</if>
+            <if test="isInStock != null">is_in_stock = #{isInStock},</if>
+            <if test="isNew != null">is_new = #{isNew},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductModelById" parameterType="Long">
+        delete from t_product_model where id = #{id}
+    </delete>
+
+    <delete id="deleteProductModelByIds" parameterType="String">
+        update t_product_model set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
