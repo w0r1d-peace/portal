@@ -46,10 +46,10 @@ public interface IItinerariesService
     /**
      * 批量删除旅游行程
      * 
-     * @param ids 需要删除的旅游行程主键集合
+     * @param idList 需要删除的旅游行程主键集合
      * @return 结果
      */
-    public int deleteItinerariesByIds(Long[] ids);
+    public int deleteItinerariesByIds(List<Integer> idList);
 
     /**
      * 删除旅游行程信息

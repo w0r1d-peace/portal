@@ -38,12 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cardNumber != null  and cardNumber != ''"> and card_number = #{cardNumber}</if>
             <if test="amount != null "> and amount = #{amount}</if>
             <if test="paymentStatus != null "> and payment_status = #{paymentStatus}</if>
+            and del_flag = '0'
         </where>
     </select>
     
     <select id="selectPaymentAgentById" parameterType="Long" resultMap="PaymentAgentResult">
         <include refid="selectPaymentAgentVo"/>
         where id = #{id}
+        and del_flag = '0'
     </select>
 
     <insert id="insertPaymentAgent" parameterType="PaymentAgent" useGeneratedKeys="true" keyProperty="id">

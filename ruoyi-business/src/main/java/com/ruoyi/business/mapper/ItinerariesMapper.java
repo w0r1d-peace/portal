@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.Itineraries;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 旅游行程Mapper接口
@@ -54,8 +55,8 @@ public interface ItinerariesMapper
     /**
      * 批量删除旅游行程
      * 
-     * @param ids 需要删除的数据主键集合
+     * @param idList 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteItinerariesByIds(Long[] ids);
+    public int deleteItinerariesByIds(@Param("idList") List<Integer> idList, @Param("updateBy") String updateBy);
 }

@@ -34,12 +34,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="publishDate != null "> and publish_date = #{publishDate}</if>
             <if test="imageFileId != null "> and image_file_id = #{imageFileId}</if>
             <if test="viewCount != null "> and view_count = #{viewCount}</if>
+            and del_flag = '0'
         </where>
     </select>
     
     <select id="selectItinerariesById" parameterType="Long" resultMap="ItinerariesResult">
         <include refid="selectItinerariesVo"/>
         where id = #{id}
+        and del_flag = '0'
     </select>
 
     <insert id="insertItineraries" parameterType="Itineraries" useGeneratedKeys="true" keyProperty="id">
@@ -98,8 +100,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteItinerariesByIds" parameterType="String">
-        delete from t_itineraries where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+        update t_itineraries set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

@@ -1,13 +1,12 @@
 package com.ruoyi.web.controller.business;
 
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.business.domain.dto.DeleteDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +17,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.domain.Itineraries;
 import com.ruoyi.business.service.IItinerariesService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
@@ -47,19 +45,6 @@ public class ItinerariesController extends BaseController
     }
 
     /**
-     * 导出旅游行程列表
-     */
-    @PreAuthorize("@ss.hasPermi('business:itineraries:export')")
-    @Log(title = "旅游行程", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, Itineraries itineraries)
-    {
-        List<Itineraries> list = itinerariesService.selectItinerariesList(itineraries);
-        ExcelUtil<Itineraries> util = new ExcelUtil<Itineraries>(Itineraries.class);
-        util.exportExcel(response, list, "旅游行程数据");
-    }
-
-    /**
      * 获取旅游行程详细信息
      */
     @PreAuthorize("@ss.hasPermi('business:itineraries:query')")
@@ -73,8 +58,8 @@ public class ItinerariesController extends BaseController
      * 新增旅游行程
      */
     @PreAuthorize("@ss.hasPermi('business:itineraries:add')")
-    @Log(title = "旅游行程", businessType = BusinessType.INSERT)
-    @PostMapping
+    @Log(title = "新增旅游行程", businessType = BusinessType.INSERT)
+    @PostMapping("/add")
     public AjaxResult add(@RequestBody Itineraries itineraries)
     {
         return toAjax(itinerariesService.insertItineraries(itineraries));
@@ -84,8 +69,8 @@ public class ItinerariesController extends BaseController
      * 修改旅游行程
      */
     @PreAuthorize("@ss.hasPermi('business:itineraries:edit')")
-    @Log(title = "旅游行程", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @Log(title = "修改旅游行程", businessType = BusinessType.UPDATE)
+    @PostMapping("/edit")
     public AjaxResult edit(@RequestBody Itineraries itineraries)
     {
         return toAjax(itinerariesService.updateItineraries(itineraries));
@@ -95,10 +80,14 @@ public class ItinerariesController extends BaseController
      * 删除旅游行程
      */
     @PreAuthorize("@ss.hasPermi('business:itineraries:remove')")
-    @Log(title = "旅游行程", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @Log(title = "删除旅游行程", businessType = BusinessType.DELETE)
+	@PostMapping("/remove")
+    public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
-        return toAjax(itinerariesService.deleteItinerariesByIds(ids));
+        if (dto.getIdList() == null || dto.getIdList().size() == 0) {
+            return error("请选择要删除的数据");
+        }
+
+        return toAjax(itinerariesService.deleteItinerariesByIds(dto.getIdList()));
     }
 }

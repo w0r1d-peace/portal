@@ -1,12 +1,17 @@
 package com.ruoyi.business.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ItinerariesMapper;
 import com.ruoyi.business.domain.Itineraries;
 import com.ruoyi.business.service.IItinerariesService;
+
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 旅游行程Service业务层处理
@@ -53,6 +58,9 @@ public class ItinerariesServiceImpl implements IItinerariesService
     @Override
     public int insertItineraries(Itineraries itineraries)
     {
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
+        itineraries.setCreateBy(user.getUserName());
         itineraries.setCreateTime(DateUtils.getNowDate());
         return itinerariesMapper.insertItineraries(itineraries);
     }
@@ -66,6 +74,9 @@ public class ItinerariesServiceImpl implements IItinerariesService
     @Override
     public int updateItineraries(Itineraries itineraries)
     {
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
+        itineraries.setUpdateBy(user.getUserName());
         itineraries.setUpdateTime(DateUtils.getNowDate());
         return itinerariesMapper.updateItineraries(itineraries);
     }
@@ -73,13 +84,16 @@ public class ItinerariesServiceImpl implements IItinerariesService
     /**
      * 批量删除旅游行程
      * 
-     * @param ids 需要删除的旅游行程主键
+     * @param idList 需要删除的旅游行程主键
      * @return 结果
      */
     @Override
-    public int deleteItinerariesByIds(Long[] ids)
+    public int deleteItinerariesByIds(List<Integer> idList)
     {
-        return itinerariesMapper.deleteItinerariesByIds(ids);
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
+        String userName = user.getUserName();
+        return itinerariesMapper.deleteItinerariesByIds(idList, userName);
     }
 
     /**
