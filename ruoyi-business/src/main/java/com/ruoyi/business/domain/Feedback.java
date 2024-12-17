@@ -7,15 +7,15 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 留言反馈对象 t_feedback
- * 
+ *
  * @author tangJM.
- * @date 2024-12-03
+ * @date 2024-12-17
  */
 public class Feedback extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /**  */
+    /** 主键 */
     private Long id;
 
     /** 姓名 */
@@ -30,97 +30,117 @@ public class Feedback extends BaseEntity
     @Excel(name = "邮箱")
     private String email;
 
-    /** 咨询主题 */
-    @Excel(name = "咨询主题")
-    private String inquiryTopic;
+    /** 公司 */
+    @Excel(name = "公司")
+    private String company;
 
-    /** 咨询内容 */
-    @Excel(name = "咨询内容")
-    private String inquiryContent;
+    /** 城市 */
+    @Excel(name = "城市")
+    private String city;
 
-    /** 反馈内容 */
-    @Excel(name = "反馈内容")
-    private String feedback;
+    /** 需求场景 */
+    @Excel(name = "需求场景")
+    private String demandScenario;
+
+    /** 留言内容
+     */
+    @Excel(name = "留言内容")
+    private String messageContent;
+
+    /** 状态 1.待处理 2.已处理 */
+    @Excel(name = "状态 1.待处理 2.已处理")
+    private Integer status;
 
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-
-    public void setMobile(String mobile) 
+    public void setMobile(String mobile)
     {
         this.mobile = mobile;
     }
 
-    public String getMobile() 
+    public String getMobile()
     {
         return mobile;
     }
-
-    public void setEmail(String email) 
+    public void setEmail(String email)
     {
         this.email = email;
     }
 
-    public String getEmail() 
+    public String getEmail()
     {
         return email;
     }
-
-    public void setInquiryTopic(String inquiryTopic) 
+    public void setCompany(String company)
     {
-        this.inquiryTopic = inquiryTopic;
+        this.company = company;
     }
 
-    public String getInquiryTopic() 
+    public String getCompany()
     {
-        return inquiryTopic;
+        return company;
+    }
+    public void setCity(String city)
+    {
+        this.city = city;
     }
 
-    public void setInquiryContent(String inquiryContent) 
+    public String getCity()
     {
-        this.inquiryContent = inquiryContent;
+        return city;
+    }
+    public void setDemandScenario(String demandScenario)
+    {
+        this.demandScenario = demandScenario;
     }
 
-    public String getInquiryContent() 
+    public String getDemandScenario()
     {
-        return inquiryContent;
+        return demandScenario;
+    }
+    public void setMessageContent(String messageContent)
+    {
+        this.messageContent = messageContent;
     }
 
-    public void setFeedback(String feedback) 
+    public String getMessageContent()
     {
-        this.feedback = feedback;
+        return messageContent;
+    }
+    public void setStatus(Integer status)
+    {
+        this.status = status;
     }
 
-    public String getFeedback() 
+    public Integer getStatus()
     {
-        return feedback;
+        return status;
     }
-
-    public void setDelFlag(String delFlag) 
+    public void setDelFlag(String delFlag)
     {
         this.delFlag = delFlag;
     }
 
-    public String getDelFlag() 
+    public String getDelFlag()
     {
         return delFlag;
     }
@@ -128,18 +148,20 @@ public class Feedback extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("mobile", getMobile())
-            .append("email", getEmail())
-            .append("inquiryTopic", getInquiryTopic())
-            .append("inquiryContent", getInquiryContent())
-            .append("feedback", getFeedback())
-            .append("delFlag", getDelFlag())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .toString();
+                .append("id", getId())
+                .append("name", getName())
+                .append("mobile", getMobile())
+                .append("email", getEmail())
+                .append("company", getCompany())
+                .append("city", getCity())
+                .append("demandScenario", getDemandScenario())
+                .append("messageContent", getMessageContent())
+                .append("status", getStatus())
+                .append("delFlag", getDelFlag())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("updateBy", getUpdateBy())
+                .append("updateTime", getUpdateTime())
+                .toString();
     }
 }

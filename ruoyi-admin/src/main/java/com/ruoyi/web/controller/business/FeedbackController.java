@@ -65,7 +65,7 @@ public class FeedbackController extends BaseController
             throw new ServiceException("姓名不能为空");
         }
 
-        if (StringUtils.isBlank(feedback.getInquiryContent())) {
+        if (StringUtils.isBlank(feedback.getMessageContent())) {
             throw new ServiceException("留言内容不能为空");
         }
 

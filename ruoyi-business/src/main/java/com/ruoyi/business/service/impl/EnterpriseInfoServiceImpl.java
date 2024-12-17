@@ -3,6 +3,8 @@ package com.ruoyi.business.service.impl;
 import java.util.List;
 
 import com.ruoyi.business.domain.vo.EnterpriseInfoVO;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import com.ruoyi.business.mapper.EnterpriseInfoMapper;
 import com.ruoyi.business.domain.EnterpriseInfo;
 import com.ruoyi.business.service.IEnterpriseInfoService;
 import com.ruoyi.common.core.text.Convert;
+
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 网站信息Service业务层处理
@@ -70,8 +74,21 @@ public class EnterpriseInfoServiceImpl implements IEnterpriseInfoService
     @Override
     public int updateEnterpriseInfo(EnterpriseInfo enterpriseInfo)
     {
-        enterpriseInfo.setUpdateTime(DateUtils.getNowDate());
-        return enterpriseInfoMapper.updateEnterpriseInfo(enterpriseInfo);
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
+
+        // 如果为空则新增
+        if (enterpriseInfo.getId() == null) {
+            enterpriseInfo.setCreateBy(user.getUserName());
+            enterpriseInfo.setCreateTime(DateUtils.getNowDate());
+            return enterpriseInfoMapper.insertEnterpriseInfo(enterpriseInfo);
+
+        } else {
+            enterpriseInfo.setUpdateBy(user.getUserName());
+            enterpriseInfo.setUpdateTime(DateUtils.getNowDate());
+            return enterpriseInfoMapper.updateEnterpriseInfo(enterpriseInfo);
+
+        }
     }
 
     /**
