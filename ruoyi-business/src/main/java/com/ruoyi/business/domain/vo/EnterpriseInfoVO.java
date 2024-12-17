@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class EnterpriseInfoVO {
 
+
+    private Long id;
     /** 单位名称 */
     @Excel(name = "单位名称")
     private String name;
