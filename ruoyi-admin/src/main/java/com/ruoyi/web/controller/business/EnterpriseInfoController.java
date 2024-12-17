@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.business;
 
 import java.util.List;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
@@ -35,7 +34,6 @@ public class EnterpriseInfoController extends BaseController
     /**
      * 查询网站信息列表
      */
-    @RequiresPermissions("business:info:list")
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(EnterpriseInfo enterpriseInfo)
@@ -48,7 +46,6 @@ public class EnterpriseInfoController extends BaseController
     /**
      * 新增保存网站信息
      */
-    @RequiresPermissions("business:info:add")
     @Log(title = "网站信息", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
@@ -60,7 +57,6 @@ public class EnterpriseInfoController extends BaseController
     /**
      * 修改保存网站信息
      */
-    @RequiresPermissions("business:info:edit")
     @Log(title = "网站信息", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
@@ -72,7 +68,6 @@ public class EnterpriseInfoController extends BaseController
     /**
      * 删除网站信息
      */
-    @RequiresPermissions("business:info:remove")
     @Log(title = "网站信息", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody

@@ -7,8 +7,8 @@ import com.ruoyi.business.domain.ProductField;
 import com.ruoyi.business.mapper.ProductFieldMapper;
 import com.ruoyi.business.util.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.ShiroUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ProductModelMapper;
 import com.ruoyi.business.domain.ProductModel;
 import com.ruoyi.business.service.IProductModelService;
+
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 产品型号Service业务层处理
@@ -105,7 +107,8 @@ public class ProductModelServiceImpl implements IProductModelService
     @Override
     public boolean insertProductModel(Map<String, Object> info)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
         String userName = user.getUserName();
 
         Long productId = Long.parseLong(info.get("productId").toString());
@@ -153,7 +156,8 @@ public class ProductModelServiceImpl implements IProductModelService
             throw new ServiceException("产品型号不存在");
         }
 
-        SysUser user = ShiroUtils.getSysUser();
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
         String userName = user.getUserName();
         List<ProductField> productFieldList = getProductFieldListByProductId(productModel.getProductId());
 
@@ -189,7 +193,8 @@ public class ProductModelServiceImpl implements IProductModelService
     @Override
     public int deleteProductModelByIds(List<Integer> idList)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
         String userName = user.getUserName();
         return productModelMapper.deleteProductModelByIds(idList, userName);
     }

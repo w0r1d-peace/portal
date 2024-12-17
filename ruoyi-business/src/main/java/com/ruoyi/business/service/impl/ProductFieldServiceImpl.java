@@ -6,8 +6,8 @@ import java.util.List;
 import com.ruoyi.business.domain.vo.ProductFieldVO;
 import com.ruoyi.business.util.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.ShiroUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +16,8 @@ import com.ruoyi.business.mapper.ProductFieldMapper;
 import com.ruoyi.business.domain.ProductField;
 import com.ruoyi.business.service.IProductFieldService;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 产品字段配置Service业务层处理
@@ -66,7 +68,8 @@ public class ProductFieldServiceImpl implements IProductFieldService
     @Transactional(rollbackFor = Exception.class)
     public boolean insertProductField(ProductField productField)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
         productField.setCreateBy(user.getUserName());
         productField.setCreateTime(DateUtils.getNowDate());
         productFieldMapper.insertProductField(productField);
@@ -88,7 +91,8 @@ public class ProductFieldServiceImpl implements IProductFieldService
     @Override
     public boolean updateProductField(ProductField productField)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
         productField.setUpdateBy(user.getUserName());
         productField.setUpdateTime(DateUtils.getNowDate());
         productFieldMapper.updateProductField(productField);
@@ -104,7 +108,8 @@ public class ProductFieldServiceImpl implements IProductFieldService
     @Override
     public boolean deleteProductFieldByIds(List<Integer> idList)
     {
-        SysUser user = ShiroUtils.getSysUser();
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
         productFieldMapper.deleteProductFieldByIds(idList, user.getUserName());
 
         for (Integer id : idList) {

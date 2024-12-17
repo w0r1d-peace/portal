@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.ruoyi.business.domain.File;
 import com.ruoyi.common.exception.ServiceException;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +38,6 @@ public class FileController extends BaseController
      * @param files
      * @return
      */
-    @RequiresPermissions("business:file:uploadMultiple")
     @PostMapping("/uploadMultiple")
     public AjaxResult uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         if (files == null || files.length == 0) {

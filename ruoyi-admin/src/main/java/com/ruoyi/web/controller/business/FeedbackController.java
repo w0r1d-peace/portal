@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
@@ -33,7 +32,6 @@ public class FeedbackController extends BaseController
     /**
      * 查询留言反馈列表
      */
-    @RequiresPermissions("business:feedback:list")
     @PostMapping("/list")
     @ResponseBody
     public TableDataInfo list(Feedback feedback)
@@ -46,7 +44,6 @@ public class FeedbackController extends BaseController
     /**
      * 导出留言反馈列表
      */
-    @RequiresPermissions("business:feedback:export")
     @Log(title = "留言反馈", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
@@ -78,7 +75,6 @@ public class FeedbackController extends BaseController
     /**
      * 修改保存留言反馈
      */
-    @RequiresPermissions("business:feedback:edit")
     @Log(title = "留言反馈", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
@@ -90,7 +86,6 @@ public class FeedbackController extends BaseController
     /**
      * 删除留言反馈
      */
-    @RequiresPermissions("business:feedback:remove")
     @Log(title = "留言反馈", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody

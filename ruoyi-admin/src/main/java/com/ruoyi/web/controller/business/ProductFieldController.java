@@ -5,7 +5,6 @@ import java.util.List;
 import com.ruoyi.business.domain.dto.DeleteDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
@@ -35,7 +34,6 @@ public class ProductFieldController extends BaseController
     /**
      * 查询产品字段配置列表
      */
-    @RequiresPermissions("business:field:list")
     @GetMapping("/list")
     public TableDataInfo list(ProductField productField)
     {
@@ -60,7 +58,6 @@ public class ProductFieldController extends BaseController
     /**
      * 新增保存产品字段配置
      */
-    @RequiresPermissions("business:field:add")
     @Log(title = "新增产品字段配置", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult addSave(@RequestBody ProductField productField)
@@ -83,7 +80,6 @@ public class ProductFieldController extends BaseController
     /**
      * 修改保存产品字段配置
      */
-    @RequiresPermissions("business:field:edit")
     @Log(title = "修改产品字段配置", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     public AjaxResult editSave(@RequestBody ProductField productField)
@@ -109,7 +105,6 @@ public class ProductFieldController extends BaseController
     /**
      * 删除产品字段配置
      */
-    @RequiresPermissions("business:field:remove")
     @Log(title = "删除产品字段配置", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     public AjaxResult remove(@RequestBody DeleteDTO dto)
@@ -118,22 +113,5 @@ public class ProductFieldController extends BaseController
             throw new ServiceException("请选择要删除的数据");
         }
         return toAjax(productFieldService.deleteProductFieldByIds(dto.getIdList()));
-    }
-
-    @GetMapping()
-    public String listView()
-    {
-        return prefix + "/list";
-    }
-
-    @GetMapping("/add/view")
-    public String addView()
-    {
-        return prefix + "/add";
-    }
-
-    @GetMapping("/edit/view/{id}")
-    public String editView() {
-        return prefix + "/edit";
     }
 }

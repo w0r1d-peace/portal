@@ -7,7 +7,6 @@ import com.ruoyi.business.domain.dto.DeleteDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
@@ -53,7 +52,6 @@ public class ProductModelController extends BaseController {
     /**
      * 新增保存产品型号
      */
-    @RequiresPermissions("business:model:add")
     @Log(title = "新增产品型号", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult addSave(@RequestBody Map<String, Object> info) {
@@ -73,7 +71,6 @@ public class ProductModelController extends BaseController {
     /**
      * 修改保存产品型号
      */
-    @RequiresPermissions("business:model:edit")
     @Log(title = "修改产品型号", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     public AjaxResult editSave(@RequestBody Map<String, Object> info) {
@@ -92,7 +89,6 @@ public class ProductModelController extends BaseController {
     /**
      * 删除产品型号
      */
-    @RequiresPermissions("business:model:remove")
     @Log(title = "删除产品型号", businessType = BusinessType.DELETE)
     @PostMapping("/remove")
     public AjaxResult remove(@RequestBody DeleteDTO dto) {
@@ -126,22 +122,5 @@ public class ProductModelController extends BaseController {
         }
 
         return AjaxResult.success(productModelService.search(keyword));
-    }
-
-    @GetMapping()
-    public String listView()
-    {
-        return prefix + "/list";
-    }
-
-    @GetMapping("/add/view")
-    public String addView()
-    {
-        return prefix + "/add";
-    }
-
-    @GetMapping("/edit/view/{id}")
-    public String editView() {
-        return prefix + "/edit";
     }
 }
