@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.FileMapper">
+    
+    <resultMap type="File" id="FileResult">
+        <result property="id"    column="id"    />
+        <result property="uuid"    column="uuid"    />
+        <result property="name"    column="name"    />
+        <result property="path"    column="path"    />
+        <result property="extension"    column="extension"    />
+        <result property="size"    column="size"    />
+        <result property="type"    column="type"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectFileVo">
+        select id, uuid, name, path, extension, size, type, del_flag, create_by, create_time, update_by, update_time from t_file
+    </sql>
+
+    <select id="selectFileList" parameterType="File" resultMap="FileResult">
+        <include refid="selectFileVo"/>
+        <where>  
+            <if test="uuid != null  and uuid != ''"> and uuid = #{uuid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+            <if test="extension != null  and extension != ''"> and extension = #{extension}</if>
+            <if test="size != null "> and size = #{size}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectFileById" parameterType="Long" resultMap="FileResult">
+        <include refid="selectFileVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFile" parameterType="File" useGeneratedKeys="true" keyProperty="id">
+        insert into t_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null and uuid != ''">uuid,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="path != null and path != ''">path,</if>
+            <if test="extension != null">extension,</if>
+            <if test="size != null">size,</if>
+            <if test="type != null">type,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null and uuid != ''">#{uuid},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="path != null and path != ''">#{path},</if>
+            <if test="extension != null">#{extension},</if>
+            <if test="size != null">#{size},</if>
+            <if test="type != null">#{type},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFile" parameterType="File">
+        update t_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uuid != null and uuid != ''">uuid = #{uuid},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="path != null and path != ''">path = #{path},</if>
+            <if test="extension != null">extension = #{extension},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFileById" parameterType="Long">
+        delete from t_file where id = #{id}
+    </delete>
+
+    <delete id="deleteFileByIds" parameterType="String">
+        delete from t_file where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
