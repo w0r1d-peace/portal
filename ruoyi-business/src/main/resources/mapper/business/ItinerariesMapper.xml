@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ItinerariesMapper">
+    
+    <resultMap type="Itineraries" id="ItinerariesResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="description"    column="description"    />
+        <result property="author"    column="author"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="imageFileId"    column="image_file_id"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectItinerariesVo">
+        select id, title, introduction, description, author, publish_date, image_file_id, view_count, del_flag, create_by, create_time, update_by, update_time from t_itineraries
+    </sql>
+
+    <select id="selectItinerariesList" parameterType="Itineraries" resultMap="ItinerariesResult">
+        <include refid="selectItinerariesVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="introduction != null  and introduction != ''"> and introduction = #{introduction}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+            <if test="imageFileId != null "> and image_file_id = #{imageFileId}</if>
+            <if test="viewCount != null "> and view_count = #{viewCount}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectItinerariesById" parameterType="Long" resultMap="ItinerariesResult">
+        <include refid="selectItinerariesVo"/>
+        where id = #{id}
+        and del_flag = '0'
+    </select>
+
+    <insert id="insertItineraries" parameterType="Itineraries" useGeneratedKeys="true" keyProperty="id">
+        insert into t_itineraries
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="introduction != null">introduction,</if>
+            <if test="description != null">description,</if>
+            <if test="author != null">author,</if>
+            <if test="publishDate != null">publish_date,</if>
+            <if test="imageFileId != null">image_file_id,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="introduction != null">#{introduction},</if>
+            <if test="description != null">#{description},</if>
+            <if test="author != null">#{author},</if>
+            <if test="publishDate != null">#{publishDate},</if>
+            <if test="imageFileId != null">#{imageFileId},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateItineraries" parameterType="Itineraries">
+        update t_itineraries
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="introduction != null">introduction = #{introduction},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="publishDate != null">publish_date = #{publishDate},</if>
+            <if test="imageFileId != null">image_file_id = #{imageFileId},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateViewCountById">
+        update t_itineraries set view_count = view_count + 1 where id = #{id}
+    </update>
+
+    <delete id="deleteItinerariesById" parameterType="Long">
+        delete from t_itineraries where id = #{id}
+    </delete>
+
+    <delete id="deleteItinerariesByIds" parameterType="String">
+        update t_itineraries set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.PaymentAgentMapper">
+    
+    <resultMap type="PaymentAgent" id="PaymentAgentResult">
+        <result property="id"    column="id"    />
+        <result property="agreementFileId"    column="agreement_file_id"    />
+        <result property="admissionNoticeFileId"    column="admission_notice_file_id"    />
+        <result property="idCardFrontFileId"    column="id_card_front_file_id"    />
+        <result property="idCardBackFileId"    column="id_card_back_file_id"    />
+        <result property="paymentType"    column="payment_type"    />
+        <result property="cardHolder"    column="card_holder"    />
+        <result property="cardNumber"    column="card_number"    />
+        <result property="amount"    column="amount"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createId"    column="create_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateId"    column="update_id"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPaymentAgentVo">
+        select id, agreement_file_id, admission_notice_file_id, id_card_front_file_id, id_card_back_file_id, payment_type, card_holder, card_number, amount, payment_status, del_flag, create_id, create_by, create_time, update_id, update_by, update_time from t_payment_agent
+    </sql>
+
+    <select id="selectPaymentAgentList" parameterType="PaymentAgent" resultMap="PaymentAgentResult">
+        <include refid="selectPaymentAgentVo"/>
+        <where>  
+            <if test="agreementFileId != null  and agreementFileId != ''"> and agreement_file_id = #{agreementFileId}</if>
+            <if test="admissionNoticeFileId != null  and admissionNoticeFileId != ''"> and admission_notice_file_id = #{admissionNoticeFileId}</if>
+            <if test="idCardFrontFileId != null  and idCardFrontFileId != ''"> and id_card_front_file_id = #{idCardFrontFileId}</if>
+            <if test="idCardBackFileId != null  and idCardBackFileId != ''"> and id_card_back_file_id = #{idCardBackFileId}</if>
+            <if test="paymentType != null "> and payment_type = #{paymentType}</if>
+            <if test="cardHolder != null  and cardHolder != ''"> and card_holder = #{cardHolder}</if>
+            <if test="cardNumber != null  and cardNumber != ''"> and card_number = #{cardNumber}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="paymentStatus != null "> and payment_status = #{paymentStatus}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="updateId != null "> and update_id = #{updateId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPaymentAgentById" parameterType="Long" resultMap="PaymentAgentResult">
+        <include refid="selectPaymentAgentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPaymentAgent" parameterType="PaymentAgent" useGeneratedKeys="true" keyProperty="id">
+        insert into t_payment_agent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="agreementFileId != null and agreementFileId != ''">agreement_file_id,</if>
+            <if test="admissionNoticeFileId != null and admissionNoticeFileId != ''">admission_notice_file_id,</if>
+            <if test="idCardFrontFileId != null and idCardFrontFileId != ''">id_card_front_file_id,</if>
+            <if test="idCardBackFileId != null and idCardBackFileId != ''">id_card_back_file_id,</if>
+            <if test="paymentType != null">payment_type,</if>
+            <if test="cardHolder != null">card_holder,</if>
+            <if test="cardNumber != null">card_number,</if>
+            <if test="amount != null">amount,</if>
+            <if test="paymentStatus != null">payment_status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateId != null">update_id,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="agreementFileId != null and agreementFileId != ''">#{agreementFileId},</if>
+            <if test="admissionNoticeFileId != null and admissionNoticeFileId != ''">#{admissionNoticeFileId},</if>
+            <if test="idCardFrontFileId != null and idCardFrontFileId != ''">#{idCardFrontFileId},</if>
+            <if test="idCardBackFileId != null and idCardBackFileId != ''">#{idCardBackFileId},</if>
+            <if test="paymentType != null">#{paymentType},</if>
+            <if test="cardHolder != null">#{cardHolder},</if>
+            <if test="cardNumber != null">#{cardNumber},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="paymentStatus != null">#{paymentStatus},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateId != null">#{updateId},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePaymentAgent" parameterType="PaymentAgent">
+        update t_payment_agent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agreementFileId != null and agreementFileId != ''">agreement_file_id = #{agreementFileId},</if>
+            <if test="admissionNoticeFileId != null and admissionNoticeFileId != ''">admission_notice_file_id = #{admissionNoticeFileId},</if>
+            <if test="idCardFrontFileId != null and idCardFrontFileId != ''">id_card_front_file_id = #{idCardFrontFileId},</if>
+            <if test="idCardBackFileId != null and idCardBackFileId != ''">id_card_back_file_id = #{idCardBackFileId},</if>
+            <if test="paymentType != null">payment_type = #{paymentType},</if>
+            <if test="cardHolder != null">card_holder = #{cardHolder},</if>
+            <if test="cardNumber != null">card_number = #{cardNumber},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateId != null">update_id = #{updateId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePaymentAgentById" parameterType="Long">
+        delete from t_payment_agent where id = #{id}
+    </delete>
+
+    <delete id="deletePaymentAgentByIds" parameterType="String">
+        update t_payment_agent set del_flag = 1, update_id = #{updateId}, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

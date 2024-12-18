@@ -1,11 +1,9 @@
 package com.ruoyi.web.controller.business;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
 import com.ruoyi.business.domain.File;
+import com.ruoyi.business.service.IFileService;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -13,11 +11,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.business.service.IFileService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * 文件Controller
@@ -25,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author tangJM.
  * @date 2024-12-12
  */
-@RestController
+@Controller
 @RequestMapping("/business/file")
 public class FileController extends BaseController
 {

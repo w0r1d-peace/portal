@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
     <groupId>com.ruoyi</groupId>
-    <artifactId>portal</artifactId>
+    <artifactId>travel</artifactId>
     <version>3.8.8</version>
 
     <name>ruoyi</name>

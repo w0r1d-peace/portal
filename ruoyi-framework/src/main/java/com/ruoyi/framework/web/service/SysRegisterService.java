@@ -1,5 +1,7 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.system.domain.SysUserRole;
+import com.ruoyi.system.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -18,6 +20,9 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 注册校验方法
  * 
@@ -28,6 +33,9 @@ public class SysRegisterService
 {
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -78,6 +86,13 @@ public class SysRegisterService
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
             boolean regFlag = userService.registerUser(sysUser);
+
+            List<SysUserRole> userRoleList = new ArrayList<>();
+            SysUserRole userRole = new SysUserRole();
+            userRole.setUserId(sysUser.getUserId());
+            userRole.setRoleId(100L);
+            userRoleList.add(userRole);
+            userRoleMapper.batchUserRole(userRoleList);
             if (!regFlag)
             {
                 msg = "注册失败,请联系系统管理人员";
