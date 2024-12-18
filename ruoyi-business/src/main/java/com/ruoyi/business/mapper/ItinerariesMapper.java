@@ -59,4 +59,10 @@ public interface ItinerariesMapper
      * @return 结果
      */
     public int deleteItinerariesByIds(@Param("idList") List<Integer> idList, @Param("updateBy") String updateBy);
+
+    /**
+     * 更新浏览次数
+     * @param id
+     */
+    void updateViewCountById(@Param("id") Long id);
 }

@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 代缴学费对象 t_payment_agent
  * 
  * @author tangJM.
- * @date 2024-12-17
+ * @date 2024-12-18
  */
 public class PaymentAgent extends BaseEntity
 {
@@ -57,6 +57,14 @@ public class PaymentAgent extends BaseEntity
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
+
+    /** 创建者ID */
+    @Excel(name = "创建者ID")
+    private Long createId;
+
+    /** 更新者ID */
+    @Excel(name = "更新者ID")
+    private Long updateId;
 
     public void setId(Long id) 
     {
@@ -157,6 +165,24 @@ public class PaymentAgent extends BaseEntity
     {
         return delFlag;
     }
+    public void setCreateId(Long createId) 
+    {
+        this.createId = createId;
+    }
+
+    public Long getCreateId() 
+    {
+        return createId;
+    }
+    public void setUpdateId(Long updateId) 
+    {
+        this.updateId = updateId;
+    }
+
+    public Long getUpdateId() 
+    {
+        return updateId;
+    }
 
     @Override
     public String toString() {
@@ -172,8 +198,10 @@ public class PaymentAgent extends BaseEntity
             .append("amount", getAmount())
             .append("paymentStatus", getPaymentStatus())
             .append("delFlag", getDelFlag())
+            .append("createId", getCreateId())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
+            .append("updateId", getUpdateId())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .toString();

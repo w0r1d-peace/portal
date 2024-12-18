@@ -51,6 +51,10 @@ public class ItinerariesController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
+        if (id == null) {
+            return error("请选择要查询的数据");
+        }
+
         return success(itinerariesService.selectItinerariesById(id));
     }
 

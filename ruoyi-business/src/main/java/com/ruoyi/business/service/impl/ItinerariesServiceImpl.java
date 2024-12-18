@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ItinerariesMapper;
 import com.ruoyi.business.domain.Itineraries;
 import com.ruoyi.business.service.IItinerariesService;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
@@ -31,9 +32,11 @@ public class ItinerariesServiceImpl implements IItinerariesService
      * @param id 旅游行程主键
      * @return 旅游行程
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Itineraries selectItinerariesById(Long id)
     {
+        itinerariesMapper.updateViewCountById(id);
         return itinerariesMapper.selectItinerariesById(id);
     }
 

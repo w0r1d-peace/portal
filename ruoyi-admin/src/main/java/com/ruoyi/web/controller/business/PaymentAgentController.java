@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.business;
 
 import java.util.List;
+
+import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +21,13 @@ import com.ruoyi.business.domain.PaymentAgent;
 import com.ruoyi.business.service.IPaymentAgentService;
 import com.ruoyi.common.core.page.TableDataInfo;
 
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
+
 /**
  * 代缴学费Controller
  * 
  * @author tangJM.
- * @date 2024-12-17
+ * @date 2024-12-18
  */
 @RestController
 @RequestMapping("/business/agent")
@@ -29,6 +35,22 @@ public class PaymentAgentController extends BaseController
 {
     @Autowired
     private IPaymentAgentService paymentAgentService;
+
+
+    /**
+     * 查询注册用户的交费列表
+     */
+    @PreAuthorize("@ss.hasPermi('business:agent:byCreateId')")
+    @GetMapping("/byCreateId")
+    public TableDataInfo byCreateId(PaymentAgent paymentAgent)
+    {
+        LoginUser loginUser = getLoginUser();
+        SysUser user = loginUser.getUser();
+        paymentAgent.setCreateId(user.getUserId());
+        startPage();
+        List<PaymentAgent> list = paymentAgentService.selectPaymentAgentList(paymentAgent);
+        return getDataTable(list);
+    }
 
     /**
      * 查询代缴学费列表
@@ -56,7 +78,7 @@ public class PaymentAgentController extends BaseController
      * 新增代缴学费
      */
     @PreAuthorize("@ss.hasPermi('business:agent:add')")
-    @Log(title = "代缴学费", businessType = BusinessType.INSERT)
+    @Log(title = "新增代缴学费", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult add(@RequestBody PaymentAgent paymentAgent)
     {
@@ -67,7 +89,7 @@ public class PaymentAgentController extends BaseController
      * 修改代缴学费
      */
     @PreAuthorize("@ss.hasPermi('business:agent:edit')")
-    @Log(title = "代缴学费", businessType = BusinessType.UPDATE)
+    @Log(title = "修改代缴学费", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     public AjaxResult edit(@RequestBody PaymentAgent paymentAgent)
     {
@@ -78,10 +100,14 @@ public class PaymentAgentController extends BaseController
      * 删除代缴学费
      */
     @PreAuthorize("@ss.hasPermi('business:agent:remove')")
-    @Log(title = "代缴学费", businessType = BusinessType.DELETE)
-	@PostMapping("/delete/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    @Log(title = "删除代缴学费", businessType = BusinessType.DELETE)
+	@PostMapping("/remove")
+    public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
-        return toAjax(paymentAgentService.deletePaymentAgentByIds(ids));
+        if (dto.getIdList() == null || dto.getIdList().size() == 0) {
+            return error("请选择要删除的数据");
+        }
+
+        return toAjax(paymentAgentService.deletePaymentAgentByIds(dto.getIdList()));
     }
 }

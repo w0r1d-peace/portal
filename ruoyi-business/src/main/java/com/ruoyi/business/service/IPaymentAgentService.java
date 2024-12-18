@@ -7,7 +7,7 @@ import com.ruoyi.business.domain.PaymentAgent;
  * 代缴学费Service接口
  * 
  * @author tangJM.
- * @date 2024-12-17
+ * @date 2024-12-18
  */
 public interface IPaymentAgentService 
 {
@@ -49,7 +49,7 @@ public interface IPaymentAgentService
      * @param ids 需要删除的代缴学费主键集合
      * @return 结果
      */
-    public int deletePaymentAgentByIds(Long[] ids);
+    public int deletePaymentAgentByIds(List<Integer> ids);
 
     /**
      * 删除代缴学费信息

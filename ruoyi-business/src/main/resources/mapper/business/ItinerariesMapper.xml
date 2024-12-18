@@ -95,6 +95,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="updateViewCountById">
+        update t_itineraries set view_count = view_count + 1 where id = #{id}
+    </update>
+
     <delete id="deleteItinerariesById" parameterType="Long">
         delete from t_itineraries where id = #{id}
     </delete>

@@ -2,12 +2,13 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.PaymentAgent;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 代缴学费Mapper接口
  * 
  * @author tangJM.
- * @date 2024-12-17
+ * @date 2024-12-18
  */
 public interface PaymentAgentMapper 
 {
@@ -54,8 +55,8 @@ public interface PaymentAgentMapper
     /**
      * 批量删除代缴学费
      * 
-     * @param ids 需要删除的数据主键集合
+     * @param idList 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePaymentAgentByIds(Long[] ids);
+    public int deletePaymentAgentByIds(@Param("idList") List<Integer> idList, @Param("updateId") Long updateId, @Param("updateBy") String updateBy);
 }
