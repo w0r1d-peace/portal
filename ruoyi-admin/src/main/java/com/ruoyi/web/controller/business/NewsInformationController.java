@@ -40,7 +40,6 @@ public class NewsInformationController extends BaseController
     /**
      * 查询新闻资讯列表
      */
-    @PreAuthorize("@ss.hasPermi('business:information:list')")
     @GetMapping("/list")
     public TableDataInfo list(NewsInformation newsInformation)
     {

@@ -36,7 +36,6 @@ public class SolutionDesignController extends BaseController
     /**
      * 查询方案设计列表
      */
-    @PreAuthorize("@ss.hasPermi('business:design:list')")
     @GetMapping("/list")
     public TableDataInfo list(SolutionDesign solutionDesign)
     {
