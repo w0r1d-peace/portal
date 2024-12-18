@@ -46,10 +46,10 @@ public interface IFeedbackService
     /**
      * 批量删除留言反馈
      *
-     * @param ids 需要删除的留言反馈主键集合
+     * @param idList 需要删除的留言反馈主键集合
      * @return 结果
      */
-    public int deleteFeedbackByIds(String ids);
+    public int deleteFeedbackByIds(List<Integer> idList);
 
     /**
      * 删除留言反馈信息
@@ -58,4 +58,11 @@ public interface IFeedbackService
      * @return 结果
      */
     public int deleteFeedbackById(Long id);
+
+    /**
+     * 更新状态
+     * @param id
+     * @return
+     */
+    boolean updateStatus(Long id);
 }

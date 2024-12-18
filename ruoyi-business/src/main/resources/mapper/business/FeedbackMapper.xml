@@ -99,13 +99,17 @@
         where id = #{id}
     </update>
 
+    <update id="updateStatus">
+        update t_feedback set status = 2 where id = #{id}
+    </update>
+
     <delete id="deleteFeedbackById" parameterType="Long">
         delete from t_feedback where id = #{id}
     </delete>
 
     <delete id="deleteFeedbackByIds" parameterType="String">
-        delete from t_feedback where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+        update t_feedback set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

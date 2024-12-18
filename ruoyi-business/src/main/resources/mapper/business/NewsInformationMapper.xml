@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.NewsInformationMapper">
+
+    <resultMap type="NewsInformation" id="NewsInformationResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="category"    column="category"    />
+        <result property="publishTime"    column="publish_time"    />
+        <result property="source"    column="source"    />
+        <result property="content"    column="content"    />
+        <result property="imageFileId"    column="image_file_id"    />
+        <result property="keywords"    column="keywords"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectNewsInformationVo">
+        select id, title, category, publish_time, source, content, image_file_id, keywords, del_flag, create_by, create_time, update_by, update_time from t_news_information
+    </sql>
+
+    <select id="selectNewsInformationList" parameterType="NewsInformation" resultMap="NewsInformationResult">
+        <include refid="selectNewsInformationVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="publishTime != null "> and publish_time = #{publishTime}</if>
+            <if test="source != null  and source != ''"> and source = #{source}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="imageFileId != null "> and image_file_id = #{imageFileId}</if>
+            <if test="keywords != null  and keywords != ''"> and keywords = #{keywords}</if>
+             and del_flag = '0'
+        </where>
+    </select>
+
+    <select id="selectNewsInformationById" parameterType="Long" resultMap="NewsInformationResult">
+        <include refid="selectNewsInformationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNewsInformation" parameterType="NewsInformation" useGeneratedKeys="true" keyProperty="id">
+        insert into t_news_information
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="category != null">category,</if>
+            <if test="publishTime != null">publish_time,</if>
+            <if test="source != null">source,</if>
+            <if test="content != null">content,</if>
+            <if test="imageFileId != null">image_file_id,</if>
+            <if test="keywords != null">keywords,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="category != null">#{category},</if>
+            <if test="publishTime != null">#{publishTime},</if>
+            <if test="source != null">#{source},</if>
+            <if test="content != null">#{content},</if>
+            <if test="imageFileId != null">#{imageFileId},</if>
+            <if test="keywords != null">#{keywords},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNewsInformation" parameterType="NewsInformation">
+        update t_news_information
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="imageFileId != null">image_file_id = #{imageFileId},</if>
+            <if test="keywords != null">keywords = #{keywords},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNewsInformationById" parameterType="Long">
+        delete from t_news_information where id = #{id}
+    </delete>
+
+    <delete id="deleteNewsInformationByIds" parameterType="String">
+        update t_news_information set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
