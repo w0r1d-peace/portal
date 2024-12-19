@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.SolutionDesignMapper">
+    
+    <resultMap type="SolutionDesign" id="SolutionDesignResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="publishTime"    column="publish_time"    />
+        <result property="content"    column="content"    />
+        <result property="imageFileId"    column="image_file_id"    />
+<!--        <result property="delFlag"    column="del_flag"    />-->
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSolutionDesignVo">
+        select id, title, publish_time, content, image_file_id, del_flag, create_by, create_time, update_by, update_time from t_solution_design
+    </sql>
+
+    <select id="selectSolutionDesignList" parameterType="SolutionDesign" resultMap="SolutionDesignResult">
+        <include refid="selectSolutionDesignVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="publishTime != null "> and publish_time = #{publishTime}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="imageFileId != null "> and image_file_id = #{imageFileId}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectSolutionDesignById" parameterType="Long" resultMap="SolutionDesignResult">
+        <include refid="selectSolutionDesignVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSolutionDesign" parameterType="SolutionDesign" useGeneratedKeys="true" keyProperty="id">
+        insert into t_solution_design
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="publishTime != null">publish_time,</if>
+            <if test="content != null">content,</if>
+            <if test="imageFileId != null">image_file_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="publishTime != null">#{publishTime},</if>
+            <if test="content != null">#{content},</if>
+            <if test="imageFileId != null">#{imageFileId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSolutionDesign" parameterType="SolutionDesign">
+        update t_solution_design
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="imageFileId != null">image_file_id = #{imageFileId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSolutionDesignById" parameterType="Long">
+        delete from t_solution_design where id = #{id}
+    </delete>
+
+    <delete id="deleteSolutionDesignByIds" parameterType="String">
+        update t_solution_design set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

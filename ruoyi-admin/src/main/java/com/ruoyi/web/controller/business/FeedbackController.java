@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.business;
 
 import java.util.List;
 
+import com.ruoyi.business.domain.dto.DeleteDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import com.ruoyi.business.domain.Feedback;
 import com.ruoyi.business.service.IFeedbackService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
@@ -32,7 +32,7 @@ public class FeedbackController extends BaseController
     /**
      * 查询留言反馈列表
      */
-    @PostMapping("/list")
+    @GetMapping("/list")
     @ResponseBody
     public TableDataInfo list(Feedback feedback)
     {
@@ -42,22 +42,9 @@ public class FeedbackController extends BaseController
     }
 
     /**
-     * 导出留言反馈列表
-     */
-    @Log(title = "留言反馈", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(Feedback feedback)
-    {
-        List<Feedback> list = feedbackService.selectFeedbackList(feedback);
-        ExcelUtil<Feedback> util = new ExcelUtil<Feedback>(Feedback.class);
-        return util.exportExcel(list, "留言反馈数据");
-    }
-
-    /**
      * 新增保存留言反馈
      */
-    @Log(title = "留言反馈", businessType = BusinessType.INSERT)
+    @Log(title = "新增留言反馈", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult addSave(@RequestBody Feedback feedback)
     {
@@ -75,10 +62,9 @@ public class FeedbackController extends BaseController
     /**
      * 修改保存留言反馈
      */
-    @Log(title = "留言反馈", businessType = BusinessType.UPDATE)
+    @Log(title = "修改留言反馈", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(Feedback feedback)
+    public AjaxResult editSave(@RequestBody Feedback feedback)
     {
         return toAjax(feedbackService.updateFeedback(feedback));
     }
@@ -86,11 +72,28 @@ public class FeedbackController extends BaseController
     /**
      * 删除留言反馈
      */
-    @Log(title = "留言反馈", businessType = BusinessType.DELETE)
+    @Log(title = "删除留言反馈", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody DeleteDTO dto)
     {
-        return toAjax(feedbackService.deleteFeedbackByIds(ids));
+        if (dto == null || dto.getIdList().isEmpty()) {
+            throw new ServiceException("请选择要删除的数据");
+        }
+
+        return toAjax(feedbackService.deleteFeedbackByIds(dto.getIdList()));
+    }
+
+    /**
+     * 更新状态
+     */
+    @Log(title = "更新状态", businessType = BusinessType.UPDATE)
+    @PostMapping( "/updateStatus")
+    public AjaxResult updateStatus(@RequestBody Feedback feedback)
+    {
+        if (feedback.getId() == null) {
+            throw new ServiceException("ID不能为空");
+        }
+
+        return toAjax(feedbackService.updateStatus(feedback.getId()));
     }
 }
