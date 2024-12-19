@@ -9,10 +9,10 @@ import java.util.Map;
 public class ApiTestV2 {
 	public static void main(String[] args) throws Exception{
 //		testPay();//统一下单，异步类交易
-//		testScanPay();//统一扫码，被扫交易
+		testScanPay();//统一扫码，被扫交易
 //		testCancel();//撤销
 //		testRefund();//退款
-		testQuery();//查询
+//		testQuery();//查询
 	}
 	
 

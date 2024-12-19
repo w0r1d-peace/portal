@@ -1,0 +1,9 @@
+package com.ruoyi.web.controller.business;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/business/pay")
+public class PayController {
+}
