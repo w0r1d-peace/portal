@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.PayQrCodeMapper">
+    
+    <resultMap type="PayQrCode" id="PayQrCodeResult">
+        <result property="id"    column="id"    />
+        <result property="appid"    column="appid"    />
+        <result property="cusid"    column="cusid"    />
+        <result property="payinfo"    column="payinfo"    />
+        <result property="randomstr"    column="randomstr"    />
+        <result property="reqsn"    column="reqsn"    />
+        <result property="retcode"    column="retcode"    />
+        <result property="sign"    column="sign"    />
+        <result property="trxcode"    column="trxcode"    />
+        <result property="trxid"    column="trxid"    />
+        <result property="trxstatus"    column="trxstatus"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPayQrCodeVo">
+        select id, appid, cusid, payinfo, randomstr, reqsn, retcode, sign, trxcode, trxid, trxstatus, del_flag, create_by, create_time, update_by, update_time from t_pay_qr_code
+    </sql>
+
+    <select id="selectPayQrCodeList" parameterType="PayQrCode" resultMap="PayQrCodeResult">
+        <include refid="selectPayQrCodeVo"/>
+        <where>  
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="cusid != null  and cusid != ''"> and cusid = #{cusid}</if>
+            <if test="payinfo != null  and payinfo != ''"> and payinfo = #{payinfo}</if>
+            <if test="randomstr != null  and randomstr != ''"> and randomstr = #{randomstr}</if>
+            <if test="reqsn != null  and reqsn != ''"> and reqsn = #{reqsn}</if>
+            <if test="retcode != null  and retcode != ''"> and retcode = #{retcode}</if>
+            <if test="sign != null  and sign != ''"> and sign = #{sign}</if>
+            <if test="trxcode != null  and trxcode != ''"> and trxcode = #{trxcode}</if>
+            <if test="trxid != null  and trxid != ''"> and trxid = #{trxid}</if>
+            <if test="trxstatus != null  and trxstatus != ''"> and trxstatus = #{trxstatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectPayQrCodeById" parameterType="Long" resultMap="PayQrCodeResult">
+        <include refid="selectPayQrCodeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPayQrCode" parameterType="PayQrCode">
+        insert into t_pay_qr_code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="appid != null">appid,</if>
+            <if test="cusid != null">cusid,</if>
+            <if test="payinfo != null">payinfo,</if>
+            <if test="randomstr != null">randomstr,</if>
+            <if test="reqsn != null">reqsn,</if>
+            <if test="retcode != null">retcode,</if>
+            <if test="sign != null">sign,</if>
+            <if test="trxcode != null">trxcode,</if>
+            <if test="trxid != null">trxid,</if>
+            <if test="trxstatus != null">trxstatus,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="appid != null">#{appid},</if>
+            <if test="cusid != null">#{cusid},</if>
+            <if test="payinfo != null">#{payinfo},</if>
+            <if test="randomstr != null">#{randomstr},</if>
+            <if test="reqsn != null">#{reqsn},</if>
+            <if test="retcode != null">#{retcode},</if>
+            <if test="sign != null">#{sign},</if>
+            <if test="trxcode != null">#{trxcode},</if>
+            <if test="trxid != null">#{trxid},</if>
+            <if test="trxstatus != null">#{trxstatus},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayQrCode" parameterType="PayQrCode">
+        update t_pay_qr_code
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appid != null">appid = #{appid},</if>
+            <if test="cusid != null">cusid = #{cusid},</if>
+            <if test="payinfo != null">payinfo = #{payinfo},</if>
+            <if test="randomstr != null">randomstr = #{randomstr},</if>
+            <if test="reqsn != null">reqsn = #{reqsn},</if>
+            <if test="retcode != null">retcode = #{retcode},</if>
+            <if test="sign != null">sign = #{sign},</if>
+            <if test="trxcode != null">trxcode = #{trxcode},</if>
+            <if test="trxid != null">trxid = #{trxid},</if>
+            <if test="trxstatus != null">trxstatus = #{trxstatus},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayQrCodeById" parameterType="Long">
+        delete from t_pay_qr_code where id = #{id}
+    </delete>
+
+    <delete id="deletePayQrCodeByIds" parameterType="String">
+        delete from t_pay_qr_code where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
