@@ -1,7 +1,7 @@
 package com.ruoyi.business.mapper;
 
 import java.util.List;
-import com.ruoyi.business.domain.PaymentAgent;
+
 import org.apache.ibatis.annotations.Param;
 
 /**
