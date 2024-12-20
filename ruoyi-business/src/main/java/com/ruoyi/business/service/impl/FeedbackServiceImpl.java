@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.FeedbackMapper;
 import com.ruoyi.business.domain.Feedback;
 import com.ruoyi.business.service.IFeedbackService;
-import com.ruoyi.common.core.text.Convert;
 
 import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
@@ -59,10 +58,7 @@ public class FeedbackServiceImpl implements IFeedbackService
     @Override
     public int insertFeedback(Feedback feedback)
     {
-        LoginUser loginUser = getLoginUser();
-        SysUser user = loginUser.getUser();
         feedback.setStatus(1);
-        feedback.setCreateBy(user.getUserName());
         feedback.setCreateTime(DateUtils.getNowDate());
         return feedbackMapper.insertFeedback(feedback);
     }

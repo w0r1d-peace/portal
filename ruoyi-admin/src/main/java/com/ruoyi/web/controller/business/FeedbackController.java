@@ -44,7 +44,6 @@ public class FeedbackController extends BaseController
     /**
      * 新增保存留言反馈
      */
-    @Log(title = "新增留言反馈", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult addSave(@RequestBody Feedback feedback)
     {
