@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class ApiTestV2 {
 	public static void main(String[] args) throws Exception{
-//		testPay();//统一下单，异步类交易
-		testScanPay();//统一扫码，被扫交易
+		testPay();//统一下单，异步类交易
+//		testScanPay();//统一扫码，被扫交易
 //		testCancel();//撤销
 //		testRefund();//退款
 //		testQuery();//查询
@@ -26,7 +26,7 @@ public class ApiTestV2 {
 
 	public static void testQuery() throws Exception{
 		SybPayService service = new SybPayService();
-		Map<String, String> map = service.query("", "112094120001088317");
+		Map<String, String> map = service.query("", "241220117332435240");
 		print(map);
 	}
 	
@@ -47,7 +47,7 @@ public class ApiTestV2 {
 	public static void testPay() throws Exception{
 		SybPayService service = new SybPayService();
 		String reqsn = String.valueOf(System.currentTimeMillis());
-		Map<String, String> map = service.pay(1, reqsn, "W01", "标题", "备注", "", "123","https://test.allinpaygd.com/JWeb/NotifyServlet","","","","", "", "", "", "", "", "", "","");
+		Map<String, String> map = service.pay(1, reqsn, "A01", "标题", "备注", "", "123","https://test.allinpaygd.com/JWeb/NotifyServlet","","","","", "", "", "", "", "", "", "","");
 		print(map);
 	}
 	
