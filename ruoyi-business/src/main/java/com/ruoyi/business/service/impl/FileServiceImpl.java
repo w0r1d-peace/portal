@@ -37,7 +37,7 @@ public class FileServiceImpl implements IFileService
     @Autowired
     private FileMapper fileMapper;
 
-    @Value("${file.upload-dir:/home/java/portal/file}")
+    @Value("${ruoyi.profile}")
     private String uploadDirectory;
 
     /**
