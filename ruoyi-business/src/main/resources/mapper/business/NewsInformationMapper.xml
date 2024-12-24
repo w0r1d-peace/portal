@@ -24,17 +24,18 @@
         select id, title, category, publish_time, source, content, image_file_id, keywords, del_flag, create_by, create_time, update_by, update_time from t_news_information
     </sql>
 
-    <select id="selectNewsInformationList" parameterType="NewsInformation" resultMap="NewsInformationResult">
-        <include refid="selectNewsInformationVo"/>
+    <select id="selectNewsInformationList" parameterType="NewsInformation" resultType="NewsInformationListVO">
+        select i.id, i.title, i.category, i.publish_time AS publishTime, i.source, i.content, i.image_file_id AS imageFileId, f.path AS imageFilePath, i.keywords, i.create_by AS createBy, i.create_time AS createTime, i.update_by AS updateBy, i.update_time AS updateTime from t_news_information i
+        left join t_file f on i.image_file_id = f.id
         <where>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="category != null  and category != ''"> and category = #{category}</if>
-            <if test="publishTime != null "> and publish_time = #{publishTime}</if>
-            <if test="source != null  and source != ''"> and source = #{source}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="imageFileId != null "> and image_file_id = #{imageFileId}</if>
-            <if test="keywords != null  and keywords != ''"> and keywords = #{keywords}</if>
-             and del_flag = '0'
+            <if test="title != null  and title != ''"> and i.title = #{title}</if>
+            <if test="category != null  and category != ''"> and i.category = #{category}</if>
+            <if test="publishTime != null "> and i.publish_time = #{publishTime}</if>
+            <if test="source != null  and source != ''"> and i.source = #{source}</if>
+            <if test="content != null  and content != ''"> and i.content = #{content}</if>
+            <if test="imageFileId != null "> and i.image_file_id = #{imageFileId}</if>
+            <if test="keywords != null  and keywords != ''"> and i.keywords = #{keywords}</if>
+             and i.del_flag = '0'
         </where>
     </select>
 

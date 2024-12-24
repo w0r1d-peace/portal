@@ -2,6 +2,7 @@ package com.ruoyi.business.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.business.domain.vo.SolutionDesignListVO;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
@@ -44,7 +45,7 @@ public class SolutionDesignServiceImpl implements ISolutionDesignService
      * @return 方案设计
      */
     @Override
-    public List<SolutionDesign> selectSolutionDesignList(SolutionDesign solutionDesign)
+    public List<SolutionDesignListVO> selectSolutionDesignList(SolutionDesign solutionDesign)
     {
         return solutionDesignMapper.selectSolutionDesignList(solutionDesign);
     }

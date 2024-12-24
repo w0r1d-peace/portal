@@ -2,6 +2,7 @@ package com.ruoyi.business.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.business.domain.vo.NewsInformationListVO;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
@@ -44,7 +45,7 @@ public class NewsInformationServiceImpl implements INewsInformationService
      * @return 新闻资讯
      */
     @Override
-    public List<NewsInformation> selectNewsInformationList(NewsInformation newsInformation)
+    public List<NewsInformationListVO> selectNewsInformationList(NewsInformation newsInformation)
     {
         return newsInformationMapper.selectNewsInformationList(newsInformation);
     }

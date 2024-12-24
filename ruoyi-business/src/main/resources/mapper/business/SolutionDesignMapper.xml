@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="publishTime"    column="publish_time"    />
         <result property="content"    column="content"    />
         <result property="imageFileId"    column="image_file_id"    />
-<!--        <result property="delFlag"    column="del_flag"    />-->
+        <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -21,14 +21,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, title, publish_time, content, image_file_id, del_flag, create_by, create_time, update_by, update_time from t_solution_design
     </sql>
 
-    <select id="selectSolutionDesignList" parameterType="SolutionDesign" resultMap="SolutionDesignResult">
-        <include refid="selectSolutionDesignVo"/>
+    <select id="selectSolutionDesignList" parameterType="SolutionDesign" resultType="SolutionDesignListVO">
+        select sd.id, sd.title, sd.publish_time AS publishTime, sd.content, sd.image_file_id AS imageFileId, f.path AS imageFilePath, sd.create_by AS createBy, sd.create_time AS createTime, sd.update_by AS updateBy, sd.update_time AS updateTime from t_solution_design sd
+        left join t_file f on sd.image_file_id = f.id
         <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="publishTime != null "> and publish_time = #{publishTime}</if>
-            <if test="content != null  and content != ''"> and content = #{content}</if>
-            <if test="imageFileId != null "> and image_file_id = #{imageFileId}</if>
-            and del_flag = '0'
+            <if test="title != null  and title != ''"> and sd.title = #{title}</if>
+            <if test="publishTime != null "> and sd.publish_time = #{publishTime}</if>
+            <if test="content != null  and content != ''"> and sd.content = #{content}</if>
+            <if test="imageFileId != null "> and sd.image_file_id = #{imageFileId}</if>
+            and sd.del_flag = '0'
         </where>
     </select>
     

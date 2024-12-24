@@ -2,6 +2,7 @@ package com.ruoyi.business.service;
 
 import java.util.List;
 import com.ruoyi.business.domain.NewsInformation;
+import com.ruoyi.business.domain.vo.NewsInformationListVO;
 
 /**
  * 新闻资讯Service接口
@@ -25,7 +26,7 @@ public interface INewsInformationService
      * @param newsInformation 新闻资讯
      * @return 新闻资讯集合
      */
-    public List<NewsInformation> selectNewsInformationList(NewsInformation newsInformation);
+    public List<NewsInformationListVO> selectNewsInformationList(NewsInformation newsInformation);
 
     /**
      * 新增新闻资讯

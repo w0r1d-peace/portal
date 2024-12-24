@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.business;
 import java.util.List;
 
 import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.business.domain.vo.SolutionDesignListVO;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class SolutionDesignController extends BaseController
     public TableDataInfo list(SolutionDesign solutionDesign)
     {
         startPage();
-        List<SolutionDesign> list = solutionDesignService.selectSolutionDesignList(solutionDesign);
+        List<SolutionDesignListVO> list = solutionDesignService.selectSolutionDesignList(solutionDesign);
         return getDataTable(list);
     }
 

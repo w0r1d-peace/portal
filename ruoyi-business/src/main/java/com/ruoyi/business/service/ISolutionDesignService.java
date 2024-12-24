@@ -2,6 +2,7 @@ package com.ruoyi.business.service;
 
 import java.util.List;
 import com.ruoyi.business.domain.SolutionDesign;
+import com.ruoyi.business.domain.vo.SolutionDesignListVO;
 
 /**
  * 方案设计Service接口
@@ -25,7 +26,7 @@ public interface ISolutionDesignService
      * @param solutionDesign 方案设计
      * @return 方案设计集合
      */
-    public List<SolutionDesign> selectSolutionDesignList(SolutionDesign solutionDesign);
+    public List<SolutionDesignListVO> selectSolutionDesignList(SolutionDesign solutionDesign);
 
     /**
      * 新增方案设计

@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.SolutionDesign;
+import com.ruoyi.business.domain.vo.SolutionDesignListVO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -26,7 +27,7 @@ public interface SolutionDesignMapper
      * @param solutionDesign 方案设计
      * @return 方案设计集合
      */
-    public List<SolutionDesign> selectSolutionDesignList(SolutionDesign solutionDesign);
+    public List<SolutionDesignListVO> selectSolutionDesignList(SolutionDesign solutionDesign);
 
     /**
      * 新增方案设计

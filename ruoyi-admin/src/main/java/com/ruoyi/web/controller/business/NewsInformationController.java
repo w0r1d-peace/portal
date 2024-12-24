@@ -1,16 +1,14 @@
 package com.ruoyi.web.controller.business;
 
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.business.domain.vo.NewsInformationListVO;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +19,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.domain.NewsInformation;
 import com.ruoyi.business.service.INewsInformationService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
@@ -44,7 +41,7 @@ public class NewsInformationController extends BaseController
     public TableDataInfo list(NewsInformation newsInformation)
     {
         startPage();
-        List<NewsInformation> list = newsInformationService.selectNewsInformationList(newsInformation);
+        List<NewsInformationListVO> list = newsInformationService.selectNewsInformationList(newsInformation);
         return getDataTable(list);
     }
 

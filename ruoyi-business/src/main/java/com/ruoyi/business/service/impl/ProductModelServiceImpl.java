@@ -79,7 +79,7 @@ public class ProductModelServiceImpl implements IProductModelService
         info.forEach((k, v) -> {
             if (v != null && !v.toString().isEmpty()) {
                 String[] values = v.toString().split(",");
-                filterColumns.append(" AND ").append(k).append(" IN (");
+                filterColumns.append(" AND ").append("pm.").append(k).append(" IN (");
                 String placeholders = String.join(",", Collections.nCopies(values.length, "?"));
                 filterColumns.append(placeholders).append(")");
                 paramsList.addAll(Arrays.asList(values));
@@ -87,7 +87,7 @@ public class ProductModelServiceImpl implements IProductModelService
         });
 
         String queryProductModelSql = String.format(
-                "SELECT id, product_id AS productId, category, packet, model_number AS modelNumber, pdf_file_id AS pdfFileId, is_in_stock AS isInStock, is_new AS isNew, create_by AS createBy, create_time AS createTime %s FROM t_product_model WHERE product_id = ? %s AND del_flag = 0",
+                "SELECT pm.id, pm.product_id AS productId, pm.category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, f.path AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id WHERE pm.product_id = ? %s AND pm.del_flag = 0",
                 showColumns, filterColumns
         );
 

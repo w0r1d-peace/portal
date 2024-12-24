@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.NewsInformation;
+import com.ruoyi.business.domain.vo.NewsInformationListVO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -26,7 +27,7 @@ public interface NewsInformationMapper
      * @param newsInformation 新闻资讯
      * @return 新闻资讯集合
      */
-    public List<NewsInformation> selectNewsInformationList(NewsInformation newsInformation);
+    public List<NewsInformationListVO> selectNewsInformationList(NewsInformation newsInformation);
 
     /**
      * 新增新闻资讯
