@@ -87,7 +87,7 @@ public class ProductModelServiceImpl implements IProductModelService
         });
 
         String queryProductModelSql = String.format(
-                "SELECT pm.id, pm.product_id AS productId, pm.category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, f.name AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id WHERE pm.product_id = ? %s AND pm.del_flag = 0",
+                "SELECT pm.id, pm.product_id AS productId, pm.category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, CONCAT(f.uuid,'.',f.extension) AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id WHERE pm.product_id = ? %s AND pm.del_flag = 0",
                 showColumns, filterColumns
         );
 
