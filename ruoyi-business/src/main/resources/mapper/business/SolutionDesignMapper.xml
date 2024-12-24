@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectSolutionDesignList" parameterType="SolutionDesign" resultType="SolutionDesignListVO">
-        select sd.id, sd.title, sd.publish_time AS publishTime, sd.content, sd.image_file_id AS imageFileId, f.path AS imageFilePath, sd.create_by AS createBy, sd.create_time AS createTime, sd.update_by AS updateBy, sd.update_time AS updateTime from t_solution_design sd
+        select sd.id, sd.title, sd.publish_time AS publishTime, sd.content, sd.image_file_id AS imageFileId, f.name AS imageFilePath, sd.create_by AS createBy, sd.create_time AS createTime, sd.update_by AS updateBy, sd.update_time AS updateTime from t_solution_design sd
         left join t_file f on sd.image_file_id = f.id
         <where>  
             <if test="title != null  and title != ''"> and sd.title = #{title}</if>

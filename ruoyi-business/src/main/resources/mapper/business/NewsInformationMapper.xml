@@ -25,7 +25,7 @@
     </sql>
 
     <select id="selectNewsInformationList" parameterType="NewsInformation" resultType="NewsInformationListVO">
-        select i.id, i.title, i.category, i.publish_time AS publishTime, i.source, i.content, i.image_file_id AS imageFileId, f.path AS imageFilePath, i.keywords, i.create_by AS createBy, i.create_time AS createTime, i.update_by AS updateBy, i.update_time AS updateTime from t_news_information i
+        select i.id, i.title, i.category, i.publish_time AS publishTime, i.source, i.content, i.image_file_id AS imageFileId, f.name AS imageFilePath, i.keywords, i.create_by AS createBy, i.create_time AS createTime, i.update_by AS updateBy, i.update_time AS updateTime from t_news_information i
         left join t_file f on i.image_file_id = f.id
         <where>
             <if test="title != null  and title != ''"> and i.title = #{title}</if>
