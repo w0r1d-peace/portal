@@ -1,8 +1,8 @@
 package com.ruoyi.business.service;
 
 import java.util.List;
-import com.ruoyi.business.domain.ProductField;
-import com.ruoyi.business.domain.vo.ProductFieldVO;
+import com.ruoyi.business.domain.ProductCategoryField;
+import com.ruoyi.business.domain.vo.ProductCategoryFieldVO;
 
 /**
  * 产品字段配置Service接口
@@ -10,7 +10,7 @@ import com.ruoyi.business.domain.vo.ProductFieldVO;
  * @author tangJM.
  * @date 2024-12-05
  */
-public interface IProductFieldService
+public interface IProductCategoryFieldService
 {
     /**
      * 查询产品字段配置
@@ -18,31 +18,31 @@ public interface IProductFieldService
      * @param id 产品字段配置主键
      * @return 产品字段配置
      */
-    public ProductField selectProductFieldById(Long id);
+    public ProductCategoryField selectProductFieldById(Long id);
 
     /**
      * 查询产品字段配置列表
      *
-     * @param productField 产品字段配置
+     * @param productCategoryField 产品字段配置
      * @return 产品字段配置集合
      */
-    public List<ProductField> selectProductFieldList(ProductField productField);
+    public List<ProductCategoryField> selectProductFieldList(ProductCategoryField productCategoryField);
 
     /**
      * 新增产品字段配置
      *
-     * @param productField 产品字段配置
+     * @param productCategoryField 产品字段配置
      * @return 结果
      */
-    public boolean insertProductField(ProductField productField);
+    public boolean insertProductField(ProductCategoryField productCategoryField);
 
     /**
      * 修改产品字段配置
      *
-     * @param productField 产品字段配置
+     * @param productCategoryField 产品字段配置
      * @return 结果
      */
-    public boolean updateProductField(ProductField productField);
+    public boolean updateProductField(ProductCategoryField productCategoryField);
 
     /**
      * 批量删除产品字段配置
@@ -65,5 +65,5 @@ public interface IProductFieldService
      * @param productId
      * @return
      */
-    List<ProductFieldVO> getByProductId(Long productId);
+    List<ProductCategoryFieldVO> getByProductCategoryId(Long productId);
 }

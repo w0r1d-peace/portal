@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author tangJM.
  * @date 2024-12-05
  */
-public class ProductField extends BaseEntity
+public class ProductCategoryField extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,10 @@ public class ProductField extends BaseEntity
     /** 产品ID */
     @Excel(name = "产品ID")
     private Long productId;
+
+    /** 产品种类ID */
+    @Excel(name = "产品种类ID")
+    private Long productCategoryId;
 
     /** 字段名称 */
     @Excel(name = "字段名称")
@@ -47,17 +51,23 @@ public class ProductField extends BaseEntity
         return id;
     }
 
-    public void setProductId(Long productId) 
-    {
-        this.productId = productId;
-    }
-
-    public Long getProductId() 
-    {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setFieldName(String fieldName) 
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Long getProductCategoryId() {
+        return productCategoryId;
+    }
+
+    public void setProductCategoryId(Long productCategoryId) {
+        this.productCategoryId = productCategoryId;
+    }
+
+    public void setFieldName(String fieldName)
     {
         this.fieldName = fieldName;
     }
@@ -102,6 +112,7 @@ public class ProductField extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("productId", getProductId())
+            .append("productCategoryId", getProductCategoryId())
             .append("fieldName", getFieldName())
             .append("sort", getSort())
             .append("isFilter", getIsFilter())

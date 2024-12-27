@@ -2,11 +2,12 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.business.mapper.ProductFieldMapper">
+<mapper namespace="com.ruoyi.business.mapper.ProductCategoryFieldMapper">
     
-    <resultMap type="ProductField" id="ProductFieldResult">
+    <resultMap type="ProductCategoryField" id="ProductFieldResult">
         <result property="id"    column="id"    />
         <result property="productId"    column="product_id"    />
+        <result property="productCategoryId"    column="product_category_id"    />
         <result property="fieldName"    column="field_name"    />
         <result property="sort"    column="sort"    />
         <result property="isFilter"    column="is_filter"    />
@@ -17,14 +18,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <sql id="selectProductFieldVo">
-        select id, product_id, field_name, sort, is_filter, del_flag, create_by, create_time, update_by, update_time from t_product_field
+    <sql id="selectProductCategoryFieldVo">
+        select id, product_id, product_category_id, field_name, sort, is_filter, del_flag, create_by, create_time, update_by, update_time from t_product_category_field
     </sql>
 
-    <select id="selectProductFieldList" parameterType="ProductField" resultMap="ProductFieldResult">
-        <include refid="selectProductFieldVo"/>
+    <select id="selectProductCategoryFieldList" parameterType="ProductCategoryField" resultMap="ProductFieldResult">
+        <include refid="selectProductCategoryFieldVo"/>
         <where>  
             <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="productCategoryId != null "> and product_category_id = #{productCategoryId}</if>
             <if test="fieldName != null  and fieldName != ''"> and field_name like concat('%', #{fieldName}, '%')</if>
             <if test="sort != null "> and sort = #{sort}</if>
             <if test="isFilter != null "> and is_filter = #{isFilter}</if>
@@ -32,15 +34,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectProductFieldById" parameterType="Long" resultMap="ProductFieldResult">
-        <include refid="selectProductFieldVo"/>
+    <select id="selectProductCategoryFieldById" parameterType="Long" resultMap="ProductFieldResult">
+        <include refid="selectProductCategoryFieldVo"/>
         where id = #{id} and del_flag = '0'
     </select>
 
-    <insert id="insertProductField" parameterType="ProductField" useGeneratedKeys="true" keyProperty="id">
-        insert into t_product_field
+    <insert id="insertProductCategoryField" parameterType="ProductCategoryField" useGeneratedKeys="true" keyProperty="id">
+        insert into t_product_category_field
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="productId != null">product_id,</if>
+            <if test="productCategoryId != null">product_category_id,</if>
             <if test="fieldName != null and fieldName != ''">field_name,</if>
             <if test="sort != null">sort,</if>
             <if test="isFilter != null">is_filter,</if>
@@ -52,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="productId != null">#{productId},</if>
+            <if test="productCategoryId != null">#{productCategoryId},</if>
             <if test="fieldName != null and fieldName != ''">#{fieldName},</if>
             <if test="sort != null">#{sort},</if>
             <if test="isFilter != null">#{isFilter},</if>
@@ -63,10 +67,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateProductField" parameterType="ProductField">
-        update t_product_field
+    <update id="updateProductCategoryField" parameterType="ProductCategoryField">
+        update t_product_category_field
         <trim prefix="SET" suffixOverrides=",">
             <if test="productId != null">product_id = #{productId},</if>
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
             <if test="fieldName != null and fieldName != ''">field_name = #{fieldName},</if>
             <if test="sort != null">sort = #{sort},</if>
             <if test="isFilter != null">is_filter = #{isFilter},</if>
@@ -79,12 +84,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteProductFieldById" parameterType="Long">
-        delete from t_product_field where id = #{id}
+    <delete id="deleteProductCategoryFieldById" parameterType="Long">
+        delete from t_product_category_field where id = #{id}
     </delete>
 
-    <delete id="deleteProductFieldByIds" parameterType="String">
-        update t_product_field set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
+    <delete id="deleteProductCategoryFieldByIds" parameterType="String">
+        update t_product_category_field set del_flag = 1, update_by = #{updateBy}, update_time = NOW() where id in
         <foreach item="id" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>

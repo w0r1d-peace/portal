@@ -3,8 +3,8 @@ package com.ruoyi.business.service.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.ruoyi.business.domain.ProductField;
-import com.ruoyi.business.mapper.ProductFieldMapper;
+import com.ruoyi.business.domain.ProductCategoryField;
+import com.ruoyi.business.mapper.ProductCategoryFieldMapper;
 import com.ruoyi.business.util.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -36,7 +36,7 @@ public class ProductModelServiceImpl implements IProductModelService
     private ProductModelMapper productModelMapper;
 
     @Autowired
-    private ProductFieldMapper productFieldMapper;
+    private ProductCategoryFieldMapper productCategoryFieldMapper;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -63,11 +63,12 @@ public class ProductModelServiceImpl implements IProductModelService
     public List<Map<String, Object>> selectProductModelList(Map<String, Object> info)
     {
         Long productId = Long.parseLong(info.get("productId").toString());
-        List<ProductField> productFieldList = getProductFieldListByProductId(productId);
+        Long productCategoryId = Long.parseLong(info.get("productCategoryId").toString());
+        List<ProductCategoryField> productCategoryFieldList = getProductCategoryFieldListByProductCategoryId(productCategoryId);
 
         StringBuilder showColumns = new StringBuilder();
-        for (ProductField productField : productFieldList) {
-            String key = Constants.COLUMN_NAME_PREFIX + productField.getId();
+        for (ProductCategoryField productCategoryField : productCategoryFieldList) {
+            String key = Constants.COLUMN_NAME_PREFIX + productCategoryField.getId();
             showColumns.append(", ").append(key);
         }
 
@@ -75,6 +76,7 @@ public class ProductModelServiceImpl implements IProductModelService
         List<Object> paramsList = new ArrayList<>();
 
         info.remove("productId");
+        info.remove("productCategoryId");
         // 动态生成查询条件
         info.forEach((k, v) -> {
             if (v != null && !v.toString().isEmpty()) {
@@ -87,11 +89,12 @@ public class ProductModelServiceImpl implements IProductModelService
         });
 
         String queryProductModelSql = String.format(
-                "SELECT pm.id, pm.product_id AS productId, pm.category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, CONCAT(f.uuid,'.',f.extension) AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id WHERE pm.product_id = ? %s AND pm.del_flag = 0",
+                "SELECT pm.id, pm.product_id AS productId, pc.name as category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, CONCAT(f.uuid,'.',f.extension) AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id LEFT JOIN t_product_category pc ON pc.id = pm.product_category_id WHERE pm.product_id = ? AND pm.product_category_id = ? %s AND pm.del_flag = 0",
                 showColumns, filterColumns
         );
 
         paramsList.add(0, productId);
+        paramsList.add(1, productCategoryId);
 
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(queryProductModelSql, paramsList.toArray());
         return mapList;
@@ -112,23 +115,23 @@ public class ProductModelServiceImpl implements IProductModelService
         String userName = user.getUserName();
 
         Long productId = Long.parseLong(info.get("productId").toString());
-        List<ProductField> productFieldList = getProductFieldListByProductId(productId);
+        List<ProductCategoryField> productCategoryFieldList = getProductCategoryFieldListByProductCategoryId(productId);
 
         NamedParameterJdbcTemplate namedJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
         Map<String, Object> params = new HashMap<>();
         params.put("productId", info.get("productId"));
+        params.put("productCategoryId", info.get("productCategoryId"));
         params.put("modelNumber", info.get("modelNumber"));
-        params.put("category", info.get("category"));
         params.put("packet", info.get("packet"));
         params.put("pdfFileId", info.get("pdfFileId"));
         params.put("isInStock", info.get("isInStock"));
         params.put("isNew", info.get("isNew"));
         params.put("createBy", userName);
-        StringBuilder insertSqlSb = new StringBuilder("INSERT INTO t_product_model(`product_id`, `model_number`, `category`, `packet`, `pdf_file_id`, `is_in_stock`, `is_new`, `del_flag`, `create_by`, `create_time` %s) VALUES (:productId, :modelNumber, :category, :packet, :pdfFileId, :isInStock, :isNew, '0', :createBy, NOW() %s)");
+        StringBuilder insertSqlSb = new StringBuilder("INSERT INTO t_product_model(`product_id`, `model_number`, `product_category_id`, `packet`, `pdf_file_id`, `is_in_stock`, `is_new`, `del_flag`, `create_by`, `create_time` %s) VALUES (:productId, :modelNumber, :productCategoryId, :packet, :pdfFileId, :isInStock, :isNew, '0', :createBy, NOW() %s)");
         StringBuilder fieldSqlSb = new StringBuilder();
         StringBuilder valueSqlSb = new StringBuilder();
-        for (ProductField productField : productFieldList) {
-            String key = Constants.COLUMN_NAME_PREFIX + productField.getId();
+        for (ProductCategoryField productCategoryField : productCategoryFieldList) {
+            String key = Constants.COLUMN_NAME_PREFIX + productCategoryField.getId();
             if (info.containsKey(key)) {
                 fieldSqlSb.append(String.format(", %s", key));
                 valueSqlSb.append(String.format(", :%s", key));
@@ -159,22 +162,21 @@ public class ProductModelServiceImpl implements IProductModelService
         LoginUser loginUser = getLoginUser();
         SysUser user = loginUser.getUser();
         String userName = user.getUserName();
-        List<ProductField> productFieldList = getProductFieldListByProductId(productModel.getProductId());
+        List<ProductCategoryField> productCategoryFieldList = getProductCategoryFieldListByProductCategoryId(productModel.getProductId());
 
         NamedParameterJdbcTemplate namedJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
         params.put("modelNumber", info.get("modelNumber"));
-        params.put("category", info.get("category"));
         params.put("packet", info.get("packet"));
         params.put("pdfFileId", info.get("pdfFileId"));
         params.put("isInStock", info.get("isInStock"));
         params.put("isNew", info.get("isNew"));
         params.put("updateBy", userName);
-        StringBuilder updateSqlSb = new StringBuilder("UPDATE t_product_model SET model_number=:modelNumber, category=:category, packet=:packet, pdf_file_id=:pdfFileId, is_in_stock=:isInStock, is_new=:isNew, update_by=:updateBy, update_time=NOW() %s WHERE id=:id");
+        StringBuilder updateSqlSb = new StringBuilder("UPDATE t_product_model SET model_number=:modelNumber, packet=:packet, pdf_file_id=:pdfFileId, is_in_stock=:isInStock, is_new=:isNew, update_by=:updateBy, update_time=NOW() %s WHERE id=:id");
         StringBuilder fieldValueSqlSb = new StringBuilder();
-        for (ProductField productField : productFieldList) {
-            String key = Constants.COLUMN_NAME_PREFIX + productField.getId();
+        for (ProductCategoryField productCategoryField : productCategoryFieldList) {
+            String key = Constants.COLUMN_NAME_PREFIX + productCategoryField.getId();
             fieldValueSqlSb.append(", ").append(key).append("=:").append(key);
             params.put(key, info.get(key));
         }
@@ -219,14 +221,15 @@ public class ProductModelServiceImpl implements IProductModelService
     @Override
     public Map<String, List<String>> getFilterData(Map<String, Object> info) {
         Long productId = Long.parseLong(info.get("productId").toString());
-        ProductField productField = new ProductField();
-        productField.setProductId(productId);
-        productField.setIsFilter(1);
-        List<ProductField> productFieldList = productFieldMapper.selectProductFieldList(productField);
+        Long productCategoryId = Long.parseLong(info.get("productCategoryId").toString());
+        ProductCategoryField productCategoryField = new ProductCategoryField();
+        productCategoryField.setProductCategoryId(productCategoryId);
+        productCategoryField.setIsFilter(1);
+        List<ProductCategoryField> productCategoryFieldList = productCategoryFieldMapper.selectProductCategoryFieldList(productCategoryField);
 
         StringBuilder showColumns = new StringBuilder();
-        String querySql = "SELECT category, packet %s FROM t_product_model WHERE product_id = ? %s GROUP BY category, packet %s";
-        for (ProductField field : productFieldList) {
+        String querySql = "SELECT packet %s FROM t_product_model WHERE product_id = ? AND product_category_id = ? %s GROUP BY packet %s";
+        for (ProductCategoryField field : productCategoryFieldList) {
             Long id = field.getId();
             String columnName = Constants.COLUMN_NAME_PREFIX + id;
             showColumns.append(", ").append(columnName);
@@ -236,6 +239,7 @@ public class ProductModelServiceImpl implements IProductModelService
         List<Object> paramsList = new ArrayList<>();
 
         info.remove("productId");
+        info.remove("productCategoryId");
         // 动态生成查询条件
         info.forEach((k, v) -> {
             if (v != null && !v.toString().isEmpty()) {
@@ -250,6 +254,7 @@ public class ProductModelServiceImpl implements IProductModelService
         querySql = String.format(querySql, showColumns, filterColumns, showColumns);
 
         paramsList.add(0, productId);
+        paramsList.add(1, productCategoryId);
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(querySql, paramsList.toArray());
 
         // 存储去重后的结果
@@ -283,20 +288,21 @@ public class ProductModelServiceImpl implements IProductModelService
 
     @Override
     public List<Map<String, Object>> search(String keyword) {
-        ProductField productField = new ProductField();
-        List<ProductField> productFieldList = productFieldMapper.selectProductFieldList(productField);
+        ProductCategoryField productCategoryField = new ProductCategoryField();
+        List<ProductCategoryField> productCategoryFieldList = productCategoryFieldMapper.selectProductCategoryFieldList(productCategoryField);
 
-        String querySql = "SELECT pm.id, pm.model_number AS modelNumber, pm.category, pm.packet, pm.pdf_file_id AS pdfFileId, " +
+        String querySql = "SELECT pm.id, pm.model_number AS modelNumber, pc.name AS category, pm.packet, pm.pdf_file_id AS pdfFileId, " +
                 " p.id AS productId, p.name AS productName, p.catalogue AS productCatalogue FROM t_product_model pm " +
                 " LEFT JOIN t_product p ON p.id = pm.product_id " +
+                " LEFT JOIN t_product_category pc ON pc.id = pm.product_category_id " +
                 " WHERE (pm.model_number LIKE CONCAT('%', :keyword, '%') " +
-                " OR pm.category LIKE CONCAT('%', :keyword, '%') " +
+                " OR pc.name LIKE CONCAT('%', :keyword, '%') " +
                 " OR pm.packet LIKE CONCAT('%', :keyword, '%') " +
                 " OR p.name LIKE CONCAT('%', :keyword, '%') " +
                 " OR p.catalogue LIKE CONCAT('%', :keyword, '%')) ";
 
         StringBuilder whereSql = new StringBuilder();
-        for (ProductField p : productFieldList) {
+        for (ProductCategoryField p : productCategoryFieldList) {
             Long id = p.getId();
             String columnName = Constants.COLUMN_NAME_PREFIX + id;
             whereSql.append(" OR ").append("pm.").append(columnName).append(" LIKE CONCAT('%', :keyword, '%') ");
@@ -321,13 +327,13 @@ public class ProductModelServiceImpl implements IProductModelService
 
 
     /**
-     * 根据产品ID获取产品型号列表
-     * @param productId
+     * 根据产品种类ID获取产品型号列表
+     * @param productCategoryId
      * @return
      */
-    private List<ProductField> getProductFieldListByProductId(Long productId) {
-        ProductField productField = new ProductField();
-        productField.setProductId(productId);
-        return productFieldMapper.selectProductFieldList(productField);
+    private List<ProductCategoryField> getProductCategoryFieldListByProductCategoryId(Long productCategoryId) {
+        ProductCategoryField productCategoryField = new ProductCategoryField();
+        productCategoryField.setProductCategoryId(productCategoryId);
+        return productCategoryFieldMapper.selectProductCategoryFieldList(productCategoryField);
     }
 }

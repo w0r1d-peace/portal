@@ -26,8 +26,6 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/business/product/model")
 public class ProductModelController extends BaseController {
 
-    private String prefix = "business/product/model";
-
     @Autowired
     private IProductModelService productModelService;
 
@@ -42,6 +40,10 @@ public class ProductModelController extends BaseController {
 
         if (ObjectUtils.isEmpty(info.get("productId"))) {
             throw new ServiceException("产品ID不能为空");
+        }
+
+        if (ObjectUtils.isEmpty(info.get("productCategoryId"))) {
+            throw new ServiceException("产品种类ID不能为空");
         }
 
         startPage();
@@ -60,6 +62,9 @@ public class ProductModelController extends BaseController {
         }
         if (ObjectUtils.isEmpty(info.get("productId"))) {
             throw new ServiceException("产品ID不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("productCategoryId"))) {
+            throw new ServiceException("产品种类ID不能为空");
         }
         if (ObjectUtils.isEmpty(info.get("modelNumber"))) {
             throw new ServiceException("型号不能为空");
@@ -106,6 +111,10 @@ public class ProductModelController extends BaseController {
 
         if (ObjectUtils.isEmpty(info.get("productId"))) {
             throw new ServiceException("产品ID不能为空");
+        }
+
+        if (ObjectUtils.isEmpty(info.get("productCategoryId"))) {
+            throw new ServiceException("产品种类ID不能为空");
         }
 
         return AjaxResult.success(productModelService.getFilterData(info));
