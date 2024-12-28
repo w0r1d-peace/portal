@@ -22,6 +22,10 @@ public class ProductModel extends BaseEntity
     @Excel(name = "产品ID")
     private Long productId;
 
+    /** 产品种类ID */
+    @Excel(name = "产品种类ID")
+    private Long productCategoryId;
+
     /** 型号编号 */
     @Excel(name = "型号编号")
     private String modelNumber;
@@ -69,7 +73,15 @@ public class ProductModel extends BaseEntity
         return productId;
     }
 
-    public void setModelNumber(String modelNumber) 
+    public Long getProductCategoryId() {
+        return productCategoryId;
+    }
+
+    public void setProductCategoryId(Long productCategoryId) {
+        this.productCategoryId = productCategoryId;
+    }
+
+    public void setModelNumber(String modelNumber)
     {
         this.modelNumber = modelNumber;
     }
@@ -138,6 +150,7 @@ public class ProductModel extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("productId", getProductId())
+            .append("productCategoryId", getProductCategoryId())
             .append("modelNumber", getModelNumber())
             .append("pdfFileId", getPdfFileId())
             .append("isInStock", getIsInStock())

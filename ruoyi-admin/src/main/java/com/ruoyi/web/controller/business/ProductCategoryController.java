@@ -40,7 +40,6 @@ public class ProductCategoryController extends BaseController
     /**
      * 查询产品种类列表
      */
-    @PreAuthorize("@ss.hasPermi('business:product:category:list')")
     @GetMapping("/list")
     public TableDataInfo list(ProductCategory productCategory)
     {

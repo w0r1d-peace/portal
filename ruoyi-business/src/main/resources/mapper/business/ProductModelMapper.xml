@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ProductModel" id="ProductModelResult">
         <result property="id"    column="id"    />
         <result property="productId"    column="product_id"    />
+        <result property="productCategoryId"    column="product_category_id"    />
         <result property="modelNumber"    column="model_number"    />
         <result property="pdfFileId"    column="pdf_file_id"    />
         <result property="isInStock"    column="is_in_stock"    />
@@ -19,13 +20,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProductModelVo">
-        select id, product_id, model_number, pdf_file_id, is_in_stock, is_new, del_flag, create_by, create_time, update_by, update_time from t_product_model
+        select id, product_id, product_category_id, model_number, pdf_file_id, is_in_stock, is_new, del_flag, create_by, create_time, update_by, update_time from t_product_model
     </sql>
 
     <select id="selectProductModelList" parameterType="ProductModel" resultMap="ProductModelResult">
         <include refid="selectProductModelVo"/>
         <where>  
             <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="productCategoryId != null "> and product_category_id = #{productCategoryId}</if>
             <if test="modelNumber != null  and modelNumber != ''"> and model_number = #{modelNumber}</if>
             <if test="pdfFileId != null  and pdfFileId != ''"> and pdf_file_id = #{pdfFileId}</if>
             <if test="isInStock != null "> and is_in_stock = #{isInStock}</if>
@@ -44,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="productId != null">product_id,</if>
+            <if test="productCategoryId != null">product_category_id,</if>
             <if test="modelNumber != null and modelNumber != ''">model_number,</if>
             <if test="pdfFileId != null">pdf_file_id,</if>
             <if test="isInStock != null">is_in_stock,</if>
@@ -57,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="productId != null">#{productId},</if>
+            <if test="productCategoryId != null">#{productCategoryId},</if>
             <if test="modelNumber != null and modelNumber != ''">#{modelNumber},</if>
             <if test="pdfFileId != null">#{pdfFileId},</if>
             <if test="isInStock != null">#{isInStock},</if>
@@ -73,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update t_product_model
         <trim prefix="SET" suffixOverrides=",">
             <if test="productId != null">product_id = #{productId},</if>
+            <if test="productCategoryId != null">product_category_id = #{productCategoryId},</if>
             <if test="modelNumber != null and modelNumber != ''">model_number = #{modelNumber},</if>
             <if test="pdfFileId != null">pdf_file_id = #{pdfFileId},</if>
             <if test="isInStock != null">is_in_stock = #{isInStock},</if>

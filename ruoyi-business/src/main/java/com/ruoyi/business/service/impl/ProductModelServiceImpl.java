@@ -115,12 +115,13 @@ public class ProductModelServiceImpl implements IProductModelService
         String userName = user.getUserName();
 
         Long productId = Long.parseLong(info.get("productId").toString());
-        List<ProductCategoryField> productCategoryFieldList = getProductCategoryFieldListByProductCategoryId(productId);
+        Long productCategoryId = Long.parseLong(info.get("productCategoryId").toString());
+        List<ProductCategoryField> productCategoryFieldList = getProductCategoryFieldListByProductCategoryId(productCategoryId);
 
         NamedParameterJdbcTemplate namedJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
         Map<String, Object> params = new HashMap<>();
-        params.put("productId", info.get("productId"));
-        params.put("productCategoryId", info.get("productCategoryId"));
+        params.put("productId", productId);
+        params.put("productCategoryId", productCategoryId);
         params.put("modelNumber", info.get("modelNumber"));
         params.put("packet", info.get("packet"));
         params.put("pdfFileId", info.get("pdfFileId"));
