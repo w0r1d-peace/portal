@@ -76,7 +76,7 @@ public class ProductCategoryFieldServiceImpl implements IProductCategoryFieldSer
         Long id = productCategoryField.getId();
         String columnName = Constants.COLUMN_NAME_PREFIX + id;
         // 根据参数给产品信号表增加字段
-        String alterSql = String.format("ALTER TABLE t_product_model ADD %s VARCHAR(255) COMMENT '%s'", columnName, productCategoryField.getFieldName());
+        String alterSql = String.format("ALTER TABLE t_product_model ADD %s TEXT COMMENT '%s'", columnName, productCategoryField.getFieldName());
         jdbcTemplate.execute(alterSql);
 
         return true;

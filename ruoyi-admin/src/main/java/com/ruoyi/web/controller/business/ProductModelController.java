@@ -1,20 +1,22 @@
 package com.ruoyi.web.controller.business;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.business.domain.dto.DeleteDTO;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.business.service.IProductModelService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 产品型号Controller
@@ -33,7 +35,7 @@ public class ProductModelController extends BaseController {
      * 查询产品型号列表
      */
     @PostMapping("/list")
-    public TableDataInfo list(@RequestBody Map<String, Object> info) {
+    public Map<String, Object> list(@RequestBody Map<String, Object> info) {
         if (info == null) {
             throw new ServiceException("参数不能为空");
         }
@@ -46,9 +48,21 @@ public class ProductModelController extends BaseController {
             throw new ServiceException("产品种类ID不能为空");
         }
 
-        startPage();
-        List<Map<String, Object>> list = productModelService.selectProductModelList(info);
-        return getDataTable(list);
+        if (ObjectUtils.isEmpty(info.get("pageNum"))) {
+            info.put("pageNum", 1);
+        }
+
+        if (ObjectUtils.isEmpty(info.get("pageSize"))) {
+            info.put("pageSize", 1000);
+        }
+
+        Pair<Long, List<Map<String, Object>>> pair = productModelService.selectProductModelList(info);
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", HttpStatus.SUCCESS);
+        result.put("msg", "查询成功");
+        result.put("rows", pair.getSecond());
+        result.put("total", pair.getFirst());
+        return result;
     }
 
     /**
@@ -84,6 +98,9 @@ public class ProductModelController extends BaseController {
         }
         if (ObjectUtils.isEmpty(info.get("id"))) {
             throw new ServiceException("ID不能为空");
+        }
+        if (ObjectUtils.isEmpty(info.get("productCategoryId"))) {
+            throw new ServiceException("产品种类ID不能为空");
         }
         if (ObjectUtils.isEmpty(info.get("modelNumber"))) {
             throw new ServiceException("型号不能为空");

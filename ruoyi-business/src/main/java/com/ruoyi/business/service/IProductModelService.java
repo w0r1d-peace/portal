@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.business.domain.ProductModel;
+import org.springframework.data.util.Pair;
 
 /**
  * 产品型号Service接口
@@ -27,7 +28,7 @@ public interface IProductModelService
      * @param info
      * @return 产品型号集合
      */
-    public List<Map<String, Object>> selectProductModelList(Map<String, Object> info);
+    public Pair<Long, List<Map<String, Object>>> selectProductModelList(Map<String, Object> info);
 
     /**
      * 新增产品型号

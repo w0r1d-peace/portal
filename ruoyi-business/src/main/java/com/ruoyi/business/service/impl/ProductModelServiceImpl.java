@@ -12,6 +12,7 @@ import com.ruoyi.common.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,7 @@ public class ProductModelServiceImpl implements IProductModelService
      * @return 产品型号
      */
     @Override
-    public List<Map<String, Object>> selectProductModelList(Map<String, Object> info)
+    public Pair<Long, List<Map<String, Object>>> selectProductModelList(Map<String, Object> info)
     {
         Long productId = Long.parseLong(info.get("productId").toString());
         Long productCategoryId = Long.parseLong(info.get("productCategoryId").toString());
@@ -75,29 +76,37 @@ public class ProductModelServiceImpl implements IProductModelService
         StringBuilder filterColumns = new StringBuilder();
         List<Object> paramsList = new ArrayList<>();
 
-        info.remove("productId");
-        info.remove("productCategoryId");
         // 动态生成查询条件
         info.forEach((k, v) -> {
-            if (v != null && !v.toString().isEmpty()) {
-                String[] values = v.toString().split(",");
-                filterColumns.append(" AND ").append("pm.").append(k).append(" IN (");
-                String placeholders = String.join(",", Collections.nCopies(values.length, "?"));
-                filterColumns.append(placeholders).append(")");
-                paramsList.addAll(Arrays.asList(values));
+            if (!(k.equals("productId") || k.equals("productCategoryId") || k.equals("pageSize") || k.equals("pageNum"))) {
+                if (v != null && !v.toString().isEmpty()) {
+                    String[] values = v.toString().split(",");
+                    filterColumns.append(" AND ").append("pm.").append(k).append(" IN (");
+                    String placeholders = String.join(",", Collections.nCopies(values.length, "?"));
+                    filterColumns.append(placeholders).append(")");
+                    paramsList.addAll(Arrays.asList(values));
+                }
             }
         });
 
-        String queryProductModelSql = String.format(
-                "SELECT pm.id, pm.product_id AS productId, pc.name as category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, CONCAT(f.uuid,'.',f.extension) AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id LEFT JOIN t_product_category pc ON pc.id = pm.product_category_id WHERE pm.product_id = ? AND pm.product_category_id = ? %s AND pm.del_flag = 0",
-                showColumns, filterColumns
+        String countProductModelSql = String.format(
+                "SELECT COUNT(0) FROM t_product_model pm WHERE pm.product_id = ? AND pm.product_category_id = ? %s AND pm.del_flag = 0",
+                filterColumns
         );
+
+        int offset = (Integer.parseInt(info.get("pageNum").toString()) - 1) * Integer.parseInt(info.get("pageSize").toString());
+        String queryProductModelSql = String.format(
+                "SELECT pm.id, pm.product_id AS productId, pm.product_category_id AS productCategoryId, pc.name as category, pm.packet, pm.model_number AS modelNumber, pm.pdf_file_id AS pdfFileId, CONCAT(f.uuid,'.',f.extension) AS pdfFilePath, pm.is_in_stock AS isInStock, pm.is_new AS isNew, pm.create_by AS createBy, pm.create_time AS createTime %s FROM t_product_model pm LEFT JOIN t_file f ON pm.pdf_file_id = f.id LEFT JOIN t_product_category pc ON pc.id = pm.product_category_id WHERE pm.product_id = ? AND pm.product_category_id = ? %s AND pm.del_flag = 0 ORDER BY id LIMIT %s OFFSET %s",
+                showColumns, filterColumns, info.get("pageSize"), offset
+        );
+
 
         paramsList.add(0, productId);
         paramsList.add(1, productCategoryId);
 
+        Long count = jdbcTemplate.queryForObject(countProductModelSql, Long.class, paramsList.toArray());
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(queryProductModelSql, paramsList.toArray());
-        return mapList;
+        return Pair.of(count, mapList);
 
     }
 
@@ -168,13 +177,14 @@ public class ProductModelServiceImpl implements IProductModelService
         NamedParameterJdbcTemplate namedJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
+        params.put("productCategoryId", info.get("productCategoryId"));
         params.put("modelNumber", info.get("modelNumber"));
         params.put("packet", info.get("packet"));
         params.put("pdfFileId", info.get("pdfFileId"));
         params.put("isInStock", info.get("isInStock"));
         params.put("isNew", info.get("isNew"));
         params.put("updateBy", userName);
-        StringBuilder updateSqlSb = new StringBuilder("UPDATE t_product_model SET model_number=:modelNumber, packet=:packet, pdf_file_id=:pdfFileId, is_in_stock=:isInStock, is_new=:isNew, update_by=:updateBy, update_time=NOW() %s WHERE id=:id");
+        StringBuilder updateSqlSb = new StringBuilder("UPDATE t_product_model SET product_category_id=:productCategoryId, model_number=:modelNumber, packet=:packet, pdf_file_id=:pdfFileId, is_in_stock=:isInStock, is_new=:isNew, update_by=:updateBy, update_time=NOW() %s WHERE id=:id");
         StringBuilder fieldValueSqlSb = new StringBuilder();
         for (ProductCategoryField productCategoryField : productCategoryFieldList) {
             String key = Constants.COLUMN_NAME_PREFIX + productCategoryField.getId();
