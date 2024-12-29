@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ProductCategoryFieldMapper;
 import com.ruoyi.business.domain.ProductCategoryField;
 import com.ruoyi.business.service.IProductCategoryFieldService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
@@ -76,9 +77,8 @@ public class ProductCategoryFieldServiceImpl implements IProductCategoryFieldSer
         Long id = productCategoryField.getId();
         String columnName = Constants.COLUMN_NAME_PREFIX + id;
         // 根据参数给产品信号表增加字段
-        String alterSql = String.format("ALTER TABLE t_product_model ADD %s TEXT COMMENT '%s'", columnName, productCategoryField.getFieldName());
+        String alterSql = String.format("ALTER TABLE t_product_model ADD %s VARCHAR(32) COMMENT '%s'", columnName, productCategoryField.getFieldName());
         jdbcTemplate.execute(alterSql);
-
         return true;
     }
 
