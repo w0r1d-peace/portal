@@ -3,8 +3,6 @@ package com.ruoyi.business.service.impl;
 import com.ruoyi.business.domain.File;
 import com.ruoyi.business.mapper.FileMapper;
 import com.ruoyi.business.service.IFileService;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 文件Service业务层处理
@@ -147,15 +144,12 @@ public class FileServiceImpl implements IFileService
                 throw new ServiceException("上传文件失败");
             }
 
-            LoginUser loginUser = getLoginUser();
-            SysUser user = loginUser.getUser();
             File fileObj = new File();
             fileObj.setUuid(fileKey);
             fileObj.setName(fileName);
             fileObj.setPath(filePath);
             fileObj.setExtension(fileExtension);
             fileObj.setSize(fileSize);
-            fileObj.setCreateBy(user.getUserName());
             fileObj.setCreateTime(DateUtils.getNowDate());
             int result = fileMapper.insertFile(fileObj);
 
