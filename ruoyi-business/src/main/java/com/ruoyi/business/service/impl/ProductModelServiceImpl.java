@@ -275,6 +275,7 @@ public class ProductModelServiceImpl implements IProductModelService
         for (Map<String, Object> row : mapList) {
             for (Map.Entry<String, Object> entry : row.entrySet()) {
                 String columnName = entry.getKey();
+                if (entry.getValue() == null) continue;
                 String value = entry.getValue().toString(); // 确保转为字符串
 
                 // 如果列名未在结果中，初始化一个Set
